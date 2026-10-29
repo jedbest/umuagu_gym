@@ -1,6 +1,6 @@
 /* styles.css */
 
-:root{--bg:#0f1115;--card:#1a1e26;--neon:#a6ff00;--text:#fff;--muted:#8a8f98}
+:root{--bg:#000;--card:#1a1e26;--neon:#fff;--neon-dark:#060666; --neon-glow: rgba(8, 8, 128, 0.3);--text:#fff;--muted:#8a8f98}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:80px}
 header{padding:18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid #222}

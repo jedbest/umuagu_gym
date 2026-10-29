@@ -1,6 +1,4 @@
-// script.js//
-
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVAxZNnzdC3MZPXI7Yt6zduWdODzY40pkf_yTbfCdS8BaSfvQhrcVxAZL-Dj9cX_1zzA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAFf3X3DanenKP1qvQDOwdYXFUrxlCmxbkSc22ZBRP2RpfhldzbwnbsSMhVtWip7Od5g/exec";
 const cleanPhone = (p) => String(p).replace(/[^0-9]/g,'').slice(-10);
 
 function updateOpenStatus(){
@@ -77,26 +75,36 @@ function getDaysFromPlan(plan){
   return 30;
 }
 
+function isWithCoaching(plan){
+  return String(plan||"").toLowerCase().indexOf("with coaching")>-1;
+}
+
+// FIXED: exact days addition, no timezone shift
 function getExpiry(plan, fromDate = new Date()){
   const d = new Date(fromDate);
-  d.setDate(d.getDate() + getDaysFromPlan(plan));
-  return d.toISOString().split('T')[0];
+  d.setHours(0,0,0,0);
+  const days = getDaysFromPlan(plan);
+  const newD = new Date(d.getFullYear(), d.getMonth(), d.getDate() + days);
+  return newD.toISOString().split('T')[0];
 }
 
 function parseDateCheck(s){
   if(!s) return null;
   const str = String(s).trim();
   if(str.includes('T') || str.match(/^\d{4}-\d{2}-\d{2}/)){
-    const d = new Date(str); return isNaN(d)?null:d;
+    const d = new Date(str); 
+    if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
   }
   if(str.includes('/')){
     const p=str.split('/');
     if(p.length===3){
       const d=new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
-      return isNaN(d)?null:d;
+      if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
     }
   }
-  const d=new Date(str); return isNaN(d)?null:d;
+  const d=new Date(str); 
+  if(!isNaN(d)){ d.setHours(0,0,0,0); return d; }
+  return null;
 }
 
 function profilePicked(input){
@@ -115,6 +123,82 @@ function profilePicked(input){
   }
 }
 
+let camStream = null;
+
+async function openCamera(){
+  try{
+    const video = document.getElementById('camPreview');
+    const btnCap = document.getElementById('btnCapture');
+    const btnClose = document.getElementById('btnCloseCam');
+    const btnOpen = document.getElementById('btnOpenCam');
+    
+    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    video.srcObject = camStream;
+    video.style.display = "block";
+    btnCap.style.display = "block";
+    btnClose.style.display = "block";
+    btnOpen.style.display = "none";
+    document.getElementById('profilePreview').style.display = "none";
+  }catch(e){
+    alert("Camera not allowed: "+e.message);
+  }
+}
+
+function closeCamera(){
+  const video = document.getElementById('camPreview');
+  if(camStream){
+    camStream.getTracks().forEach(t=>t.stop());
+    camStream=null;
+  }
+  video.style.display="none";
+  document.getElementById('btnCapture').style.display="none";
+  document.getElementById('btnCloseCam').style.display="none";
+  document.getElementById('btnOpenCam').style.display="block";
+}
+
+function capturePhoto(){
+  const video = document.getElementById('camPreview');
+  const canvas = document.getElementById('camCanvas');
+  const preview = document.getElementById('profilePreview');
+  
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video,0,0);
+  const dataUrl = canvas.toDataURL('image/jpeg',0.85);
+  
+  preview.src = dataUrl;
+  preview.style.display = "block";
+  document.getElementById('profileName').textContent = "✅ Photo captured";
+  localStorage.setItem('tempProfilePic', dataUrl);
+  
+  // also create a file object for upload
+  fetch(dataUrl).then(res=>res.blob()).then(blob=>{
+    const file = new File([blob],"camera.jpg",{type:"image/jpeg"});
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('profilePic').files = dt.files;
+  });
+  
+  closeCamera();
+}
+
+// keep your old profilePicked but make it show preview too
+const oldProfilePicked = profilePicked;
+profilePicked = function(input){
+  const el=document.getElementById('profileName');
+  const preview=document.getElementById('profilePreview');
+  if(input.files[0]){
+    el.textContent = "✅ " + input.files[0].name;
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+      localStorage.setItem('tempProfilePic', e.target.result);
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
 async function validateForm(e){
   e.preventDefault();
   const name=document.getElementById('fullName').value.trim();
@@ -125,6 +209,8 @@ async function validateForm(e){
   const email = document.getElementById('email')?.value.trim() || "";
   const profileInput = document.getElementById('profilePic');
   const profileFile = profileInput? profileInput.files[0] : null;
+  const branchEl = document.getElementById('branch');
+  const selectedBranch = branchEl ? branchEl.value : "";
 
   const payRadio = document.querySelector('input[name="pay"]:checked');
   const isNow = payRadio? payRadio.value === 'now' : false;
@@ -135,8 +221,8 @@ async function validateForm(e){
   const err=document.getElementById('errorMsg');
   const submitBtn = e.target.querySelector('button[type="submit"]');
 
-  if(!name||!phone||!sess||!plan||!goal){
-    err.textContent='⚠️ Fill all fields oo - all are required';err.style.display='block';return false;
+  if(!name||!phone||!sess||!plan||!goal||!selectedBranch){
+    err.textContent='⚠️ Fill all fields oo - including Branch';err.style.display='block';return false;
   }
   if(!profileFile &&!localStorage.getItem('tempProfilePic')){
     err.textContent='⚠️ Please upload your face photo for ID card';err.style.display='block';return false;
@@ -149,30 +235,45 @@ async function validateForm(e){
   submitBtn.disabled = true;
 
   try{
-    // === 1. CHECK EXISTING FOR EXTEND LOGIC ===
-    const checkRes = await fetch(SCRIPT_URL + "?phone=" + cleanPhone(phone) + "&t=" + Date.now(), { cache: "no-store" });
+    // === 1. CHECK EXISTING FOR EXTEND LOGIC - FIXED WITH BRANCH ===
+    const checkRes = await fetch(SCRIPT_URL + "?phone=" + cleanPhone(phone) + "&branch=" + encodeURIComponent(selectedBranch) + "&t=" + Date.now(), { cache: "no-store" });
     const members = await checkRes.json();
-    const existing = members[0];
+    const existing = members && members.length>0 ? members[0] : null;
 
     let expiryDate = "";
     let isTopUp = false;
 
-     if(existing){
-      const exp = existing.expiryDate || existing.expiry || '';
-      const expD = parseDateCheck(exp);
-      const today = new Date(); today.setHours(0,0,0,0);
+    if(existing){
+      const existingBranch = String(existing.branch||"").toLowerCase().trim();
+      const selectedLow = String(selectedBranch||"").toLowerCase().trim();
+      const existingIsWith = isWithCoaching(existing.plan||"");
+      const newIsWith = isWithCoaching(plan);
 
-      if(expD && expD >= today){
-        // ACTIVE - EXTEND, NOT BLOCK
-        isTopUp = true;
-        expiryDate = getExpiry(plan, expD);
-        submitBtn.innerText = "Extending...";
+      // ONLY renew if SAME branch AND SAME coaching type
+      if(existingBranch === selectedLow && existingIsWith === newIsWith){
+        const exp = existing.expiryDate || existing.expiry || existing.originalExpiry || '';
+        const expD = parseDateCheck(exp);
+        const today = new Date(); today.setHours(0,0,0,0);
+
+        if(expD && expD >= today){
+          // ACTIVE - EXTEND
+          isTopUp = true;
+          expiryDate = getExpiry(plan, expD);
+          submitBtn.innerText = "Extending...";
+        } else {
+          // EXPIRED - new expiry from today
+          isTopUp = true; // still topup but from today
+          expiryDate = getExpiry(plan, new Date());
+        }
       } else {
-        // EXPIRED - new expiry from today
+        // DIFFERENT branch or different coaching -> NEW registration
+        isTopUp = false;
         expiryDate = getExpiry(plan, new Date());
       }
     } else {
+      // No existing for this branch -> NEW
       expiryDate = getExpiry(plan, new Date());
+      isTopUp = false;
     }
 
     // === 2. CONTINUE REGISTRATION ===
@@ -201,11 +302,13 @@ async function validateForm(e){
     }
 
     const data = {
-      name: name, phone: phone, email: email || `${cleanPhone(phone)}@ironcity.com`,
+      name: name, phone: phone,
+      branch: selectedBranch,
+      email: email || `${cleanPhone(phone)}@ironcity.com`,
       session: sess, plan: plan, goal: goal, payMethod: payMethod,
       price: price, amount: price, expiry: expiryDate, receipt: receiptObj,
       profilePic: profileObj,
-      isTopUp: isTopUp
+      isTopUp: isTopUp,
     };
 
     await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
@@ -214,8 +317,8 @@ async function validateForm(e){
     localStorage.setItem('memberName', name);
     localStorage.setItem('memberPhone', phone);
     localStorage.setItem('memberExpiry', expiryDate);
-    // profile pic already in tempProfilePic for card page
-   window.location.href = `thank_you.html?name=${encodeURIComponent(name)}&plan=${encodeURIComponent(plan)}&expiry=${encodeURIComponent(expiryDate)}&phone=${encodeURIComponent(phone)}&payMethod=${encodeURIComponent(payMethod)}&isTopUp=${isTopUp}`;
+    localStorage.setItem('memberBranch', selectedBranch);
+   window.location.href = `thank_you.html?name=${encodeURIComponent(name)}&plan=${encodeURIComponent(plan)}&expiry=${encodeURIComponent(expiryDate)}&phone=${encodeURIComponent(phone)}&payMethod=${encodeURIComponent(payMethod)}&isTopUp=${isTopUp}&branch=${encodeURIComponent(selectedBranch)}`;
 
   } catch(err2){
     console.error(err2);

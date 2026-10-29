@@ -38,6 +38,7 @@ const plan=p.get('plan')||localStorage.getItem('plan')||'';
 const expiry=p.get('expiry')||localStorage.getItem('memberExpiry')||'';
 const phone=p.get('phone')||localStorage.getItem('memberPhone')||'';
 const payMethod=p.get('payMethod')||localStorage.getItem('payMethod')||'Pay at Gym';
+const branch=p.get('branch')||localStorage.getItem('branch')||'';
 const isTopUp=p.get('isTopUp')==='true';
 const isPayAtGym=payMethod.toLowerCase().includes('gym');
 
@@ -45,6 +46,7 @@ document.getElementById('info').innerHTML=`
 <div>Name: <b style="color:#a6ff00">${name}</b></div>
 <div>Phone: <b>${phone}</b></div>
 <div>Plan: <b>${plan}</b></div>
+<div>Branch: <b>${branch}</b></div>
 <div>Expiry: <b style="color:orange">${expiry}</b> (after approval)</div>
 <div>Status: <span class="badge" style="background:orange;color:#000">PENDING APPROVAL</span></div>
 <div>Pay Method: <b>${payMethod}</b></div>
