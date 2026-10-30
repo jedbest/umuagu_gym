@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>UMUAGU GYM ADMIN</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}body{background:#000;color:#fff;padding:10px}h1{color:#a6ff00;text-align:center;margin-top:8px;font-size:21px}h2{margin-top:20px;font-size:16px}#loginBox{max-width:350px;margin:80px auto;background:#111;padding:25px;border-radius:16px;border:2px solid #a6ff00;text-align:center}#dashboard{display:none}.search{width:100%;padding:13px;border-radius:10px;background:#111;border:1px solid #333;color:#fff;margin:10px 0 5px 0;font-size:15px}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}.card-stat{background:#111;border:1px solid #333;padding:12px;border-radius:10px;text-align:center;font-size:13px}.card-stat b{color:#a6ff00;font-size:18px;display:block;margin-top:3px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}body{background:#000;color:#9AA0C0;padding:10px}h1{color:#9AA0C0;text-align:center;margin-top:8px;font-size:21px}h2{margin-top:20px;font-size:16px}#loginBox{max-width:350px;margin:80px auto;background:#111;padding:25px;border-radius:16px;border:2px solid #9AA0C0;text-align:center}#dashboard{display:none}.search{width:100%;padding:13px;border-radius:10px;background:#111;border:1px solid #333;color:#9AA0C0;margin:10px 0 5px 0;font-size:15px}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}.card-stat{background:#111;border:1px solid #333;padding:12px;border-radius:10px;text-align:center;font-size:13px}.card-stat b{color:#9AA0C0;font-size:18px;display:block;margin-top:3px}
 /* FIXED - SCROLL LEFT-RIGHT + UP-DOWN - NO CUTTING */
 .table-wrap{
   margin-top:10px;
@@ -17,7 +18,7 @@
   width:100%;
 }
 .table-wrap::-webkit-scrollbar{height:8px;width:8px}
-.table-wrap::-webkit-scrollbar-thumb{background:#a6ff00;border-radius:10px}
+.table-wrap::-webkit-scrollbar-thumb{background:#9AA0C0;border-radius:10px}
 .table-wrap::-webkit-scrollbar-track{background:#111}
 table{
   width:100%;
@@ -27,7 +28,7 @@ table{
   min-width:950px; /* bigger so Branch + Phone no cut */
 }
 th{
-  background:#a6ff00;
+  background:#9AA0C0;
   color:#000;
   padding:12px 10px;
   text-align:left;
@@ -53,7 +54,7 @@ td small{
   white-space:nowrap;
 }
 td small{font-size:11.5px}
-.count{display:inline-block;padding:3px 9px;border-radius:20px;font-weight:800;margin-left:6px;font-size:11px}.btn{border:none;padding:10px 12px;border-radius:8px;font-weight:900;cursor:pointer;font-size:13px;min-height:38px}.btn-green{background:#a6ff00;color:#000;width:100%}.btn-wa{background:#a6ff00;color:#000;padding:8px 12px;border-radius:7px;text-decoration:none;font-size:12px;font-weight:800;white-space:nowrap;min-height:36px;display:inline-flex;align-items:center}.btn-paid{background:orange;color:#000;padding:8px 12px;border-radius:7px;font-size:12.5px;font-weight:800;cursor:pointer;border:none;white-space:nowrap;min-height:36px}#addBox{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:99;padding:15px;overflow:auto}#addBox .inner{max-width:400px;margin:30px auto;background:#111;border:2px solid #a6ff00;padding:20px;border-radius:16px}#addBox input,#addBox select{width:100%;padding:12px;margin:6px 0;border-radius:8px;background:#000;border:1px solid #333;color:#fff;font-size:14px}#searchInfo{font-size:12.5px;color:#a6ff00;margin-left:5px}.btn-cancel{background:#ff3333;color:#fff;padding:8px 10px;border-radius:7px;font-size:11px;font-weight:800;cursor:pointer;border:none;margin-left:4px;min-height:36px}
+.count{display:inline-block;padding:3px 9px;border-radius:20px;font-weight:800;margin-left:6px;font-size:11px}.btn{border:none;padding:10px 12px;border-radius:8px;font-weight:900;cursor:pointer;font-size:13px;min-height:38px}.btn-green{background:#9AA0C0;color:#000;width:100%}.btn-wa{background:#9AA0C0;color:#000;padding:8px 12px;border-radius:7px;text-decoration:none;font-size:12px;font-weight:800;white-space:nowrap;min-height:36px;display:inline-flex;align-items:center}.btn-paid{background:orange;color:#000;padding:8px 12px;border-radius:7px;font-size:12.5px;font-weight:800;cursor:pointer;border:none;white-space:nowrap;min-height:36px}#addBox{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:99;padding:15px;overflow:auto}#addBox .inner{max-width:400px;margin:30px auto;background:#111;border:2px solid #9AA0C0;padding:20px;border-radius:16px}#addBox input,#addBox select{width:100%;padding:12px;margin:6px 0;border-radius:8px;background:#000;border:1px solid #333;color:#9AA0C0;font-size:14px}#searchInfo{font-size:12.5px;color:#9AA0C0;margin-left:5px}.btn-cancel{background:#ff3333;color:#9AA0C0;padding:8px 10px;border-radius:7px;font-size:11px;font-weight:800;cursor:pointer;border:none;margin-left:4px;min-height:36px}
 .days-control{
   display:flex;
   align-items:center;
@@ -72,7 +73,7 @@ td small{font-size:11.5px}
   height:36px;
   text-align:center;
   background:#000;
-  color:#a6ff00;
+  color:#9AA0C0;
   font-weight:800;
   border:1px solid #444;
   border-radius:6px;
@@ -85,24 +86,25 @@ td small{font-size:11.5px}
   border-radius:6px;
   border:1px solid #333;
   background:#222;
-  color:#fff;
+  color:#9AA0C0;
   font-size:13px;
   font-weight:800;
   cursor:pointer;
   flex-shrink:0;
 }
-.days-control .btn-green, .days-control button:last-child{
+.btn-green{background-color: #000080; color: #9AA0C0;}
+.days-control , .days-control button:last-child{
   width:auto !important;
   padding:0 10px;
-  background:#a6ff00;
+  background:#9AA0C0;
   color:#000;
   font-weight:900;
   font-size:13px;
   border:none;
 }
-.icon-btn{width:38px;height:38px;border-radius:8px;border:1px solid #333;background:#111;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0}
+.icon-btn{width:38px;height:38px;border-radius:8px;border:1px solid #333;background:#111;color:#9AA0C0;cursor:pointer;font-size:16px;flex-shrink:0}
 #receiptModal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:200;padding:15px;overflow:auto;align-items:center;justify-content:center}
-#receiptModal .inner{max-width:500px;width:100%;margin:20px auto;background:#111;border:2px solid #a6ff00;border-radius:16px;padding:15px}
+#receiptModal .inner{max-width:500px;width:100%;margin:20px auto;background:#111;border:2px solid #9AA0C0;border-radius:16px;padding:15px}
 #receiptModal img,#receiptModal iframe{width:100%;max-height:80vh;border-radius:12px;background:#000}
 input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .pass-wrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}.pass-wrap .search{padding-right:70px !important}#togglePass{position:absolute;right:45px;top:50%;transform:translateY(-70%);cursor:pointer;color:#888;font-size:16px;z-index:2}#passStatus{position:absolute;right:15px;top:50%;transform:translateY(-70%);font-size:16px}
@@ -110,7 +112,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 </head>
 <body>
 <div id="loginBox">
-  <div style="color:#a6ff00;font-weight:900;font-size:20px">🔒 ADMIN LOGIN</div>
+  <div style="color:#9AA0C0;font-weight:900;font-size:20px">🔒 ADMIN LOGIN</div>
   <div style="color:#666;font-size:12px;margin-bottom:15px">UMUAGU GYM ONLY</div>
   <div class="pass-wrap">
     <input type="password" id="passInput" placeholder="Enter Password" class="search" style="margin:0 0 10px 0" autocomplete="off">
@@ -123,10 +125,10 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <div id="dashboard">
 <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;flex-wrap:wrap;gap:8px">
   <div>
-    <h2 style="color:#a6ff00;margin:0;font-size:18px">UMUAGU GYM ADMIN</h2>
-    <div id="welcomeBranch" style="color:#fff;font-weight:800;font-size:13px;margin-top:4px"></div>
+    <h2 style="color:#9AA0C0;margin:0;font-size:18px">UMUAGU GYM ADMIN</h2>
+    <div id="welcomeBranch" style="color:#9AA0C0;font-weight:800;font-size:13px;margin-top:4px"></div>
   </div>
-  <button onclick="logout()" style="background:#222;color:#fff;border:1px solid #333;padding:6px 12px;border-radius:8px">Logout</button>
+  <button onclick="logout()" style="background:#222;color:#9AA0C0;border:1px solid #333;padding:6px 12px;border-radius:8px">Logout</button>
 </div>
   <div class="stats">
     <div class="card-stat"><span>Total</span><b id="total">0</b></div>
@@ -138,15 +140,15 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   <div class="stats">
     <div id="revenueBox" class="card-stat" style="grid-column: span 3;">
   <div>💰 Total Revenue</div>
-  <div id="revenue" style="color:#a6ff00;font-size:22px;display:block;margin-top:3px">₦0</div>
+  <div id="revenue" style="color:#9AA0C0;font-size:22px;display:block;margin-top:3px">₦0</div>
   <div id="branchRevenueSplit" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #333">
     <div style="background:#000;padding:8px;border-radius:8px;border:1px solid #222">
       <span style="font-size:11px;color:#888">📍 ENUGU</span>
-      <b id="revenueEnugu" style="color:#a6ff00;font-size:15px;display:block;margin-top:2px">₦0</b>
+      <b id="revenueEnugu" style="color:#9AA0C0;font-size:15px;display:block;margin-top:2px">₦0</b>
     </div>
     <div style="background:#000;padding:8px;border-radius:8px;border:1px solid #222">
       <span style="font-size:11px;color:#888">📍 NSUKKA</span>
-      <b id="revenueNsukka" style="color:#a6ff00;font-size:15px;display:block;margin-top:2px">₦0</b>
+      <b id="revenueNsukka" style="color:#9AA0C0;font-size:15px;display:block;margin-top:2px">₦0</b>
     </div>
   </div>
 </div>
@@ -155,30 +157,34 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
     <button class="btn btn-green" onclick="loadMembers()">🔄 Refresh</button>
-    <button class="btn btn-green" style="background:#fff;color:#000" onclick="document.getElementById('addBox').style.display='block'">+ Add Member</button>
+    <button class="btn btn-green" style="background:#9AA0C0;color:#000" onclick="document.getElementById('addBox').style.display='block'">+ Add Member</button>
   </div>
   <input type="text" id="search" class="search" placeholder="🔍 Search ANYTHING..." oninput="filterTable()">
   <div id="searchInfo"></div>
   <h2>🟡 EXPIRES TODAY <span id="todayCount" class="count" style="background:orange;color:#000">0</span></h2>
   <div class="table-wrap"><table id="todayTable"><thead><tr><th>Name</th><th>Phone</th><th>Plan</th><th>Branch</th><th>Action</th></tr></thead><tbody><tr><td colspan="4">Loading...</td></tr></tbody></table></div>
-  <h2>🟢 ACTIVE <span id="activeCount" class="count" style="background:#a6ff00;color:#000">0</span></h2>
+  <h2>🟢 ACTIVE <span id="activeCount" class="count" style="background:#9AA0C0;color:#000">0</span></h2>
   <div class="table-wrap"><table id="activeTable"><thead><tr><th>Name</th><th>Phone</th><th>Plan</th><th>Branch</th><th>Expires</th><th>Status</th><th>Manage</th></tr></thead><tbody><tr><td colspan="6">Loading...</td></tr></tbody></table></div>
-  <h2>🔴 EXPIRED <span id="expiredCount" class="count" style="background:red;color:#fff">0</span></h2>
+  <h2>🔴 EXPIRED <span id="expiredCount" class="count" style="background:red;color:#9AA0C0">0</span></h2>
   <div class="table-wrap"><table id="expiredTable"><thead><tr><th>Name</th><th>Phone</th><th>Plan</th><th>Branch</th><th>Expired On</th><th>Status</th><th>Manage</th></tr></thead><tbody><tr><td colspan="6">Loading...</td></tr></tbody></table></div>
 </div>
-<div id="addBox"><div class="inner"><h2 style="color:#a6ff00;margin-bottom:10px">+ Add Member Manually</h2><div style="margin:12px 0;padding:10px;background:#111;border-radius:10px;text-align:center">
-  <div style="color:#a6ff00;font-weight:800;margin-bottom:8px">📸 Member Photo (Camera Only)</div>
-  <img id="adminProfilePreview" src="" style="display:none;width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #a6ff00;margin:0 auto 8px">
+<div id="addBox"><div class="inner"><h2 style="color:#9AA0C0;margin-bottom:10px">+ Add Member Manually</h2><div style="margin:12px 0;padding:10px;background:#111;border-radius:10px;text-align:center">
+  <div style="color:#9AA0C0;font-weight:800;margin-bottom:8px">📸 Member Photo (Camera Only)</div>
+  <img id="adminProfilePreview" src="" style="display:none;width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #9AA0C0;margin:0 auto 8px">
   <video id="adminCamPreview" autoplay playsinline style="display:none;width:100%;max-width:240px;border-radius:10px;margin:0 auto 8px"></video>
   <canvas id="adminCamCanvas" style="display:none"></canvas>
   <div style="display:flex;gap:6px;justify-content:center">
-    <button type="button" onclick="openAdminCamera()" style="background:#222;color:#fff;padding:8px 12px;border-radius:8px;border:1px solid #333">📷 Open Camera</button>
-    <button type="button" id="adminBtnCapture" onclick="captureAdminPhoto()" style="display:none;background:#a6ff00;color:#000;padding:8px 12px;border-radius:8px;font-weight:800;border:none">✅ Capture</button>
-    <button type="button" id="adminBtnClose" onclick="closeAdminCamera()" style="display:none;background:#333;color:#fff;padding:8px 12px;border-radius:8px;border:none">✖</button>
+    <button type="button" onclick="openAdminCamera()" style="background:#222;color:#9AA0C0;padding:8px 12px;border-radius:8px;border:1px solid #333">📷 Open Camera</button>
+    <button type="button" id="adminBtnCapture" onclick="captureAdminPhoto()" style="display:none;background:#9AA0C0;color:#000;padding:8px 12px;border-radius:8px;font-weight:800;border:none">✅ Capture</button>
+    <button type="button" id="adminBtnClose" onclick="closeAdminCamera()" style="display:none;background:#333;color:#9AA0C0;padding:8px 12px;border-radius:8px;border:none">✖</button>
   </div>
   <input type="hidden" id="adminProfileBase64">
-</div><input id="addName" placeholder="Full Name"><input id="addPhone" placeholder="Phone e.g 081..."><input id="mEmail" type="email" placeholder="Email Address"><select id="addPlan"><option value="">Select Plan</option><option value="Daily Without Coaching">Daily Without Coaching - ₦1500</option><option value="Daily With Coaching">Daily With Coaching - ₦2500</option><option value="Weekly Without Coaching">Weekly Without Coaching - ₦7000</option><option value="Weekly With Coaching">Weekly With Coaching - ₦10000</option><option value="2 Weeks Without Coaching">2 Weeks Without Coaching - ₦12000</option><option value="2 Weeks With Coaching">2 Weeks With Coaching - ₦16000</option><option value="Monthly Without Coaching">Monthly Without Coaching - ₦12000</option><option value="Monthly With Coaching">Monthly With Coaching - ₦20000</option></select><select id="addSession"><option value="">Select Session</option><option>Morning 7AM-11AM</option><option>Evening 3PM-7PM</option></select><select id="addBranch"><option value="" disabled selected>Select branch</option><option value="Nsukka">Nsukka</option><option value="Enugu">Enugu</option></select><select id="addPay"><option value="Pay at Gym">Pay at Gym (Unpaid - ₦0)</option><option value="Pay Immediately">Paid Cash / Transfer</option></select><button class="btn btn-green" style="margin-top:10px" onclick="addMemberManually()">Add Member</button><button class="btn" style="width:100%;margin-top:8px;background:#222;color:#fff" onclick="document.getElementById('addBox').style.display='none'">Cancel</button><div id="addMsg" style="margin-top:10px;font-size:12px"></div></div></div>
-<div id="receiptModal" onclick="if(event.target===this)closeReceipt()"><div class="inner"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="color:#a6ff00">🧾 Receipt</b><button onclick="closeReceipt()" style="background:red;color:#fff;border:none;padding:6px 12px;border-radius:8px;font-weight:900;cursor:pointer">✕ Close</button></div><div id="receiptContent" style="text-align:center;color:#666">Loading...</div></div></div>
+</div><input id="addName" placeholder="Full Name"><input id="addPhone" placeholder="Phone e.g 081..."><input id="mEmail" type="email" placeholder="Email Address"><select id="addPlan"><option value="">Select Plan</option><option value="Daily Without Coaching">Daily Without Coaching - ₦1500</option><option value="Daily With Coaching">Daily With Coaching - ₦2500</option><option value="Weekly Without Coaching">Weekly Without Coaching - ₦7000</option><option value="Weekly With Coaching">Weekly With Coaching - ₦10000</option><option value="2 Weeks Without Coaching">2 Weeks Without Coaching - ₦12000</option><option value="2 Weeks With Coaching">2 Weeks With Coaching - ₦16000</option><option value="Monthly Without Coaching">Monthly Without Coaching - ₦12000</option><option value="Monthly With Coaching">Monthly With Coaching - ₦20000</option></select><select id="addSession"><option value="">Select Session</option><option>Morning 7AM-11AM</option><option>Evening 3PM-7PM</option></select><select id="addBranch"><option value="" disabled selected>Select branch</option><option value="Nsukka">Nsukka</option><option value="Enugu">Enugu</option></select><select id="addPay"><option value="Pay at Gym">Pay at Gym (Unpaid - ₦0)</option><option value="Pay Immediately">Paid Cash / Transfer</option></select><button class="btn btn-green" style="margin-top:10px" onclick="addMemberManually()">Add Member</button><button class="btn" style="width:100%;margin-top:8px;background:#222;color:#9AA0C0" onclick="document.getElementById('addBox').style.display='none'">Cancel</button><div id="addMsg" style="margin-top:10px;font-size:12px"></div></div></div>
+<div id="receiptModal" onclick="if(event.target===this)closeReceipt()"><div class="inner"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="color:#9AA0C0">🧾 Receipt</b><button onclick="closeReceipt()" style="background:red;color:#9AA0C0;border:none;padding:6px 12px;border-radius:8px;font-weight:900;cursor:pointer">✕ Close</button></div><div id="receiptContent" style="text-align:center;color:#666">Loading...</div></div></div>
+<div id="umuagu-fullscreen" style="display:none;position:fixed;inset:0;background:#F5F6FB;z-index:99999;overflow:auto">
+  <div id="umuaguCard" style="width:100%;min-height:100vh;background:#F5F6FB;padding:24px 20px;display:flex;flex-direction:column;align-items:center">
+  </div>
+</div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAFf3X3DanenKP1qvQDOwdYXFUrxlCmxbkSc22ZBRP2RpfhldzbwnbsSMhVtWip7Od5g/exec";
@@ -259,7 +265,7 @@ passInput.addEventListener("input", () => {
     loginError.innerText = "";
   } else if(LOGINS[val]){
     passStatus.innerHTML = "✅";
-    passInput.style.borderColor = "#a6ff00";
+    passInput.style.borderColor = "#9AA0C0";
     loginError.innerText = "";
   } else {
     passStatus.innerHTML = "❌";
@@ -283,21 +289,67 @@ let rawDataCache=[];
 function getDynamicPriceAdmin(days, isWith){days=Number(days)||0;var P={daily_without:1500,daily_with:2500,weekly_without:7000,weekly_with:10000,twoWeeks_without:12000,twoWeeks_with:16000,monthly_without:12000,monthly_with:20000};var d=isWith?P.daily_with:P.daily_without;var w=isWith?P.weekly_with:P.weekly_without;var w2=isWith?P.twoWeeks_with:P.twoWeeks_without;var mo=isWith?P.monthly_with:P.monthly_without;if(days===1)return d;if(days===7)return w;if(days===14)return w2;if(days===30)return mo;var price=0;var rem=days;if(rem>=30){price+=Math.floor(rem/30)*mo;rem%=30;}if(rem>=14){price+=Math.floor(rem/14)*w2;rem%=14;}if(rem>=7){price+=Math.floor(rem/7)*w;rem%=7;}price+=rem*d;return price;}
 function getPriceFromPlan(plan){var p=String(plan||"").toLowerCase().trim();if(p==="daily without coaching")return 1500;if(p==="daily with coaching")return 2500;if(p==="weekly without coaching")return 7000;if(p==="weekly with coaching")return 10000;if(p==="2 weeks without coaching")return 12000;if(p==="2 weeks with coaching")return 16000;if(p==="monthly without coaching")return 12000;if(p==="monthly with coaching")return 20000;var m=p.match(/(\d+)\s*day/);if(m){var days=parseInt(m[1]);var isWith=p.indexOf("with coaching")>-1 && p.indexOf("without")==-1;return getDynamicPriceAdmin(days, isWith);}return 1500;}
 function changeDays(id, delta){const inp=document.getElementById(id);let v=parseInt(inp.value)||0;v+=delta;if(v<1)v=1;if(v>365)v=365;inp.value=v}
-function viewReceipt(url){if(!url){alert('No receipt');return}const modal=document.getElementById('receiptModal');const content=document.getElementById('receiptContent');modal.style.display='flex';let displayUrl=url;if(url.includes('drive.google.com')&&url.includes('/view')){const id=url.match(/[-\w]{25,}/);if(id)displayUrl=`https://drive.google.com/file/d/${id[0]}/preview`;}if(url.toLowerCase().includes('.pdf')||displayUrl.includes('/preview')){content.innerHTML=`<iframe src="${displayUrl}" style="height:70vh"></iframe><br><a href="${url}" target="_blank" style="color:#a6ff00;margin-top:10px;display:inline-block">Open</a>`;}else{content.innerHTML=`<img src="${displayUrl}" style="max-width:100%"><br><a href="${url}" target="_blank" style="color:#a6ff00;margin-top:10px;display:inline-block">Open</a>`;}}
+function viewReceipt(url){if(!url){alert('No receipt');return}const modal=document.getElementById('receiptModal');const content=document.getElementById('receiptContent');modal.style.display='flex';let displayUrl=url;if(url.includes('drive.google.com')&&url.includes('/view')){const id=url.match(/[-\w]{25,}/);if(id)displayUrl=`https://drive.google.com/file/d/${id[0]}/preview`;}if(url.toLowerCase().includes('.pdf')||displayUrl.includes('/preview')){content.innerHTML=`<iframe src="${displayUrl}" style="height:70vh"></iframe><br><a href="${url}" target="_blank" style="color:#9AA0C0;margin-top:10px;display:inline-block">Open</a>`;}else{content.innerHTML=`<img src="${displayUrl}" style="max-width:100%"><br><a href="${url}" target="_blank" style="color:#9AA0C0;margin-top:10px;display:inline-block">Open</a>`;}}
 function closeReceipt(){document.getElementById('receiptModal').style.display='none';}
 function generateAndSendCard(name,phone,plan,expiry,profilePic,membershipId){const clean=String(phone).replace(/[^0-9]/g,'');const wa=clean.startsWith('0')?'234'+clean.slice(1):clean;const id=membershipId||('IC-'+clean.slice(-4));const qr=`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=IRONCITY|${name}|${phone}|${plan}|${expiry}`;const text=`*IRONCITY GYM - CARD APPROVED* 💳\n\nName: ${name}\nPhone: ${phone}\nID: ${id}\nPlan: ${plan}\nExpires: ${expiry}\n\nQR: ${qr}\nShow at gate.`;window.open(`https://wa.me/${wa}?text=${encodeURIComponent(text)}`,'_blank');}
 async function addDaysToMember(phone, inputId, btn, isWith){const days=parseInt(document.getElementById(inputId).value)||0;if(days<1){alert('Enter days');return}const pricePreview=getDynamicPriceAdmin(days, isWith);if(!confirm(`Add ${days} days to ${phone}? Price ₦${pricePreview.toLocaleString()} - Will be PAUSED until you Mark Paid + Play.`))return;if(btn){btn.innerText='...';btn.disabled=true}try{await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({action:"addDays",phone:phone,days:days,isWith:isWith})});alert(`✅ Added ${days} days - Price ₦${pricePreview.toLocaleString()} - Now at TOP as PAUSED (—) - Mark Paid`);setTimeout(loadMembers,3500)}catch(e){alert('Error:'+e.message);if(btn){btn.innerText='Add';btn.disabled=false}}}
-async function pauseMember(phone, btn){if(!confirm('Pause?'))return;if(btn){btn.innerText='...';btn.disabled=true}try{await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({action:"pause",phone:String(phone)})});alert('⏸️ Paused - Now shows —');setTimeout(loadMembers,3500)}catch(e){alert(e.message)}}
-async function playMember(phone, btn){if(!confirm('Play? Starts TODAY'))return;if(btn){btn.innerText='...';btn.disabled=true}try{await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({action:"play",phone:String(phone)})});alert('▶️ Resumed - Starts TODAY - Expiry now shows date');setTimeout(loadMembers,3500)}catch(e){alert(e.message)}}
-async function markAsPaid(phone, plan, branch, btn){
-  if(btn){btn.innerText="Marking...";btn.disabled=true}
+async function pauseMember(phone, membershipId, btn){
+  // Backward compatible: if second param is actually the button
+  if(membershipId && membershipId.tagName){ btn = membershipId; membershipId = ""; }
+  if(!confirm('Pause?'))return;
+  if(btn){btn.innerText='...';btn.disabled=true}
+  try{
+    await fetch(SCRIPT_URL,{
+      method:"POST",
+      mode:"no-cors",
+      body:JSON.stringify({
+        action:"pause",
+        phone:String(phone),
+        membershipId:String(membershipId||"")
+      })
+    });
+    alert('⏸️ Paused - Now shows —');
+    setTimeout(loadMembers,3500)
+  }catch(e){alert(e.message)}
+}
+
+async function playMember(phone, membershipId, btn){
+  // Backward compatible: if second param is actually the button
+  if(membershipId && membershipId.tagName){ btn = membershipId; membershipId = ""; }
+  if(!confirm('Play? Starts TODAY'))return;
+  if(btn){btn.innerText='...';btn.disabled=true}
+  try{
+    await fetch(SCRIPT_URL,{
+      method:"POST",
+      mode:"no-cors",
+      body:JSON.stringify({
+        action:"play",
+        phone:String(phone),
+        membershipId:String(membershipId||"")
+      })
+    });
+    alert('▶️ Resumed - Starts TODAY - Expiry now shows date');
+    setTimeout(loadMembers,3500)
+  }catch(e){alert(e.message)}
+}
+async function markAsPaid(phone, plan, branch, btn, membershipId){
+  if(membershipId && membershipId.tagName){ membershipId = ""; } // safety if btn passed as 4th
+  if(btn && btn.tagName && !membershipId){ membershipId = ""; }
+  // Find real membershipId from table if not passed
+  if(!membershipId){
+    // Try to get from global list
+    const all = window.allMembers || rawDataCache || [];
+    const found = all.find(x => cleanPhoneForAdmin(x.phone) === cleanPhoneForAdmin(phone) && String(x.branch||'').toLowerCase() === String(branch||'').toLowerCase() && String(x.plan||'').toLowerCase() === String(plan||'').toLowerCase());
+    if(found) membershipId = found.membershipId || "";
+  }
+  if(btn && btn.innerText){ btn.innerText="Marking..."; btn.disabled=true; }
   const price=getPriceFromPlan(plan);
-  if(!confirm('Mark as PAID ₦'+price.toLocaleString()+' for '+(branch||'')+' ?')){
+  if(!confirm('Mark as PAID ₦'+price.toLocaleString()+' for '+(branch||'')+' ? ID:'+membershipId)){
     if(btn){btn.innerText="Mark Paid ₦"+price.toLocaleString();btn.disabled=false}
     return
   }
   try{
-    await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({action:"markPaid",phone:String(phone),price:Number(price),branch:branch||""})});
+    await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({action:"markPaid",phone:String(phone),price:Number(price),branch:branch||"",membershipId:membershipId||""})});
     alert('✅ Paid ₦'+price.toLocaleString()+'! Wait 4 secs');
     setTimeout(loadMembers,4000);
   }catch(e){
@@ -305,35 +357,73 @@ async function markAsPaid(phone, plan, branch, btn){
     if(btn){btn.innerText="Mark Paid";btn.disabled=false}
   }
 }
+function cleanPhoneForAdmin(p){return String(p||'').replace(/[^0-9]/g,'');}
+let adminStream = null;
 
-let adminCamStream=null;
 async function openAdminCamera(){
   try{
-    const v=document.getElementById('adminCamPreview');
-    adminCamStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}});
-    v.srcObject=adminCamStream;
-    v.style.display="block";
-    document.getElementById('adminBtnCapture').style.display="block";
-    document.getElementById('adminBtnClose').style.display="block";
-  }catch(e){ alert("Camera error: "+e.message); }
+    const video = document.getElementById('adminCamPreview');
+    const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user', width:400, height:400}});
+    video.srcObject = stream;
+    adminStream = stream;
+    video.style.display='block';
+    document.getElementById('adminBtnCapture').style.display='inline-block';
+    document.getElementById('adminBtnClose').style.display='inline-block';
+  }catch(err){ alert('Camera error: '+err.message); }
 }
+
 function closeAdminCamera(){
-  const v=document.getElementById('adminCamPreview');
-  if(adminCamStream){ adminCamStream.getTracks().forEach(t=>t.stop()); adminCamStream=null; }
-  v.style.display="none";
-  document.getElementById('adminBtnCapture').style.display="none";
-  document.getElementById('adminBtnClose').style.display="none";
+  if(adminStream){ adminStream.getTracks().forEach(t=>t.stop()); }
+  document.getElementById('adminCamPreview').style.display='none';
+  document.getElementById('adminBtnCapture').style.display='none';
+  document.getElementById('adminBtnClose').style.display='none';
 }
+
 function captureAdminPhoto(){
-  const v=document.getElementById('adminCamPreview');
-  const c=document.getElementById('adminCamCanvas');
-  const img=document.getElementById('adminProfilePreview');
-  c.width=v.videoWidth; c.height=v.videoHeight;
-  c.getContext('2d').drawImage(v,0,0);
-  const dataUrl=c.toDataURL('image/jpeg',0.85);
-  img.src=dataUrl; img.style.display="block";
-  document.getElementById('adminProfileBase64').value=dataUrl;
+  const video = document.getElementById('adminCamPreview');
+  const canvas = document.getElementById('adminCamCanvas');
+  const preview = document.getElementById('adminProfilePreview');
+  
+  // Compress to 300x300 - small enough for Sheets
+  canvas.width = 300; canvas.height = 300;
+  const ctx = canvas.getContext('2d');
+  // Center crop to square
+  const size = Math.min(video.videoWidth, video.videoHeight);
+  const x = (video.videoWidth - size)/2;
+  const y = (video.videoHeight - size)/2;
+  ctx.drawImage(video, x, y, size, size, 0, 0, 300, 300);
+  
+  // Compress to JPEG 0.6 quality = ~15KB (fits in Sheet!)
+  const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+  
+  // Save to hidden input - THIS is what goes to ProfilePic column
+  document.getElementById('adminProfileBase64').value = compressedBase64;
+  
+  // Show preview
+  preview.src = compressedBase64;
+  preview.style.display='block';
+  
   closeAdminCamera();
+  console.log('Photo captured, size:', Math.round(compressedBase64.length/1024)+'KB - will save to ProfilePic');
+}
+
+// REPLACE getMemberPhoto with this
+function getMemberPhoto(m){
+  let pic = m.ProfilePic || m.profilePic || m.profile || m.ProfilePicUrl || m['ProfilePic'] || '';
+  // Your sheet might save in index 12
+  if(!pic && Array.isArray(m)) pic = m[12] || '';
+  if(!pic || pic.trim() === ''){
+    const initials = (m.name||'U').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    return `https://ui-avatars.com/api/?name=${initials}&background=0A0A8A&color=9AA0C0&size=300&bold=true`;
+  }
+  // If Drive link /view -> make thumbnail
+  if(pic.includes('drive.google.com')){
+    let id = '';
+    let match = pic.match(/[-\w]{25,}/);
+    if(match) id = match[0];
+    if(id) return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
+  }
+  return pic;
 }
 
 // When you submit add member, include profilePic: document.getElementById('adminProfileBase64').value
@@ -346,7 +436,7 @@ async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase
   const ctx=canvas.getContext('2d');
   // Background
   ctx.fillStyle="#000"; ctx.fillRect(0,0,600,380);
-  ctx.fillStyle="#a6ff00"; ctx.fillRect(0,0,600,8);
+  ctx.fillStyle="#9AA0C0"; ctx.fillRect(0,0,600,8);
   // Photo
   if(profileBase64){
     const img=new Image(); img.src=profileBase64;
@@ -356,11 +446,11 @@ async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase
     ctx.drawImage(img,25,35,110,110);
     ctx.restore();
   }
-  ctx.fillStyle="#fff"; ctx.font="bold 22px Arial"; ctx.fillText(name,160,70);
-  ctx.fillStyle="#a6ff00"; ctx.font="14px Arial"; ctx.fillText((branch||"Iron City")+" | "+plan,160,95);
+  ctx.fillStyle="#9AA0C0"; ctx.font="bold 22px Arial"; ctx.fillText(name,160,70);
+  ctx.fillStyle="#9AA0C0"; ctx.font="14px Arial"; ctx.fillText((branch||"Iron City")+" | "+plan,160,95);
   ctx.fillStyle="#ccc"; ctx.font="13px Arial"; ctx.fillText("Phone: "+phone,160,115);
   ctx.fillText("Expires: "+expiry,160,135);
-  ctx.fillStyle="#a6ff00"; ctx.fillRect(0,340,600,40);
+  ctx.fillStyle="#9AA0C0"; ctx.fillRect(0,340,600,40);
   ctx.fillStyle="#000"; ctx.font="bold 16px Arial"; ctx.fillText("IRON CITY GYM - Show this card at entrance",20,365);
   
   canvas.toBlob(async (blob)=>{
@@ -382,7 +472,46 @@ async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase
 // <button onclick="sendCardOnWhatsapp('${m.phone}','${m.name}','${m.plan}','${m.expiry}','${m.branch}','${m.profilePic}')">💳 Send Card</button>
 
 async function cancelMember(phone, btn){if(!confirm('Delete?'))return;if(btn){btn.innerText="Deleting...";btn.disabled=true}await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({action:"cancel",phone:phone})});alert('✅ Deleted');setTimeout(loadMembers,4000)}
-async function addMemberManually(){const name=document.getElementById('addName').value.trim();const phone=document.getElementById('addPhone').value.trim();const email=document.getElementById('mEmail').value;const branch=document.getElementById('addBranch')?.value;const plan=document.getElementById('addPlan').value;const session=document.getElementById('addSession').value;const payMethod=document.getElementById('addPay').value;const msg=document.getElementById('addMsg');if(!name||!phone||!email||!plan||!session||!branch){msg.innerHTML='<span style="color:red">Fill all fields</span>';return}msg.innerHTML='Adding...';const isPaid=payMethod.includes('Immediately');const price=isPaid?getPriceFromPlan(plan):0;const expiry=getExpiryFromPlan(plan);const data={name,phone,email,session,plan,goal:"general",payMethod,price,amount:price,expiry,branch};try{await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(data)});msg.innerHTML='<span style="color:#a6ff00">✅ Added</span>';setTimeout(()=>{document.getElementById('addBox').style.display='none';loadMembers();document.getElementById('addName').value='';document.getElementById('addPhone').value='';msg.innerHTML=''},1200)}catch(e){msg.innerHTML='<span style="color:red">Error: '+e.message+'</span>'}}
+async function addMemberManually(){
+  const name=document.getElementById('addName').value.trim();
+  const phone=document.getElementById('addPhone').value.trim();
+  const email=document.getElementById('mEmail').value;
+  const branch=document.getElementById('addBranch')?.value;
+  const plan=document.getElementById('addPlan').value;
+  const session=document.getElementById('addSession').value;
+  const payMethod=document.getElementById('addPay').value;
+  const msg=document.getElementById('addMsg');
+  const profilePic = document.getElementById('adminProfileBase64').value; // <-- FIX: GET PHOTO
+  
+  if(!name||!phone||!email||!plan||!session||!branch){
+    msg.innerHTML='<span style="color:red">Fill all fields + take photo</span>';return
+  }
+  if(!profilePic){
+    if(!confirm('No photo taken - continue with initials?')) return;
+  }
+  msg.innerHTML='Adding...';
+  const isPaid=payMethod.includes('Immediately');
+  const price=isPaid?getPriceFromPlan(plan):0;
+  const expiry=getExpiryFromPlan(plan);
+  const data={
+    name,phone,email,session,plan,goal:"general",
+    payMethod,price,amount:price,expiry,branch,
+    ProfilePic: profilePic // <-- FIX: SAVE TO SHEET
+  };
+  try{
+    await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(data)});
+    msg.innerHTML='<span style="color:#9AA0C0">✅ Added with photo!</span>';
+    setTimeout(()=>{
+      document.getElementById('addBox').style.display='none';
+      loadMembers();
+      document.getElementById('addName').value='';
+      document.getElementById('addPhone').value='';
+      document.getElementById('adminProfileBase64').value='';
+      document.getElementById('adminProfilePreview').style.display='none';
+      msg.innerHTML=''
+    },1200)
+  }catch(e){msg.innerHTML='<span style="color:red">Error: '+e.message+'</span>'}
+}
 async function loadMembers(){
   document.getElementById('todayDate').innerText=new Date().toDateString().slice(4);
   try{
@@ -395,7 +524,8 @@ async function loadMembers(){
         return b === currentLogin.branch.toLowerCase();
       });
     }
-    rawDataCache = filteredData;
+   rawDataCache = filteredData;
+window.allMembers = filteredData; // <-- ADD THIS so card finds real member
       let total=0,active=0,expired=0,soon=0,revenue=0,revenueEnugu=0,revenueNsukka=0;let todayHTML="",activeHTML="",expiredHTML="";
     const today=new Date();today.setHours(0,0,0,0);
     filteredData.reverse().forEach((m, idx)=>{
@@ -420,24 +550,39 @@ async function loadMembers(){
   if(diff<1) diff = m.days || getDaysFromPlan(m.plan) || 7;
   if(diff<0) diff = m.days || 7;
 }else diff = m.days || getDaysFromPlan(m.plan) || 7;
-        expiryDisplay=`<span style="color:#666">—</span> <small style="color:#a6ff00">⏸️ ${diff}d pending</small>`;
+        expiryDisplay=`<span style="color:#666">—</span> <small style="color:#9AA0C0">⏸️ ${diff}d pending</small>`;
       } else if(expiry){
         expiry.setHours(0,0,0,0);diff=Math.ceil((expiry-today)/(1000*60*60*24));
         expiryDisplay=expiry.toDateString().slice(4)+` <small style="color:#666">(${diff}d)</small>`;
       } else { expiryDisplay=`<span style="color:#666">—</span>`; }
       const inputId=`days_${idx}`;
      const daysControl=`<div class="days-control"><button onclick="changeDays('${inputId}',-1)">▼</button><input id="${inputId}" type="number" value="7" min="1" max="365"><button onclick="changeDays('${inputId}',1)">▲</button><button onclick="addDaysToMember('${m.phone}','${inputId}',this, ${m.isWith})">Add</button></div>`;
-      const receiptBtn = m.receipt ? `<button style="background:#fff;color:#000;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:800;border:none;cursor:pointer" onclick="viewReceipt('${m.receipt}')">🧾 Receipt</button>` : `<span style="font-size:10px;color:#666">No receipt</span>`;
+      const receiptBtn = m.receipt ? `<button style="background:#9AA0C0;color:#000;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:800;border:none;cursor:pointer" onclick="viewReceipt('${m.receipt}')">🧾 Receipt</button>` : `<span style="font-size:10px;color:#666">No receipt</span>`;
       const expStr = (m.expiryDate||m.expiry||m.originalExpiry||'').toString().split('T')[0];
       const displayPlan = m.planDisplay || m.plan;
       const priceForBtn = getPriceFromPlan(m.plan);
-      const cardBtn = `<button ${!isPaid?'disabled':''} style="background:${!isPaid?'#333':'#a6ff00'};color:${!isPaid?'#666':'#000'};padding:5px 10px;border-radius:8px;font-size:11px;font-weight:800;border:none;cursor:${!isPaid?'not-allowed':'pointer'}" onclick="generateAndSendCard('${String(m.name).replace(/'/g,"\\'")}','${m.phone}','${String(displayPlan).replace(/'/g,"\\'")}','${expStr}','${m.profilePic||''}','${m.membershipId||''}')">💳 ${isPaid?'Send Card WA':'Card Locked'}</button>`;
+
+const BLUE = '#0A0A8A';
+
+// REPLACE your const cardBtn line with this:
+const cardBtn = `<button class="wa-card-btn" ${!isPaid?'disabled':''} data-id="${m.membershipId||m.phone||''}" style="background:${!isPaid?'#E5E7EB':'#0A0A8A'};color:${!isPaid?'#9CA3AF':'#9AA0C09AA0C0'};padding:8px 16px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:${!isPaid?'not-allowed':'pointer'}">💳 ${isPaid?'Send Card WA':'Card Locked'}</button>`;
+
+
+
       let cancelBtn="";let markPaidBtn="";
-      if(!isPaid){cancelBtn=`<button class="btn-cancel" onclick="cancelMember('${m.phone}',this)">Cancel</button>`;markPaidBtn=`<button class="btn-paid" onclick="markAsPaid('${m.phone}','${m.plan}','${m.branch||''}',this)">Mark Paid ₦${priceForBtn.toLocaleString()}</button>`}else{markPaidBtn=`<span style="color:#a6ff00;font-weight:700">Paid ₦${amt.toLocaleString()}</span>`}
-      let pausePlayBtn="";
-      if(isPaused){ if(!isPaid){ pausePlayBtn=`<button class="icon-btn" disabled style="opacity:0.2">▶️</button> <small style="color:#ffaa00">Locked</small>`; } else { pausePlayBtn=`<button class="icon-btn" onclick="playMember('${m.phone}',this)">▶️</button>`; } } else { pausePlayBtn=`<button class="icon-btn" onclick="pauseMember('${m.phone}',this)">⏸️</button>`; }
-      const actionCell=`<div style="display:flex;flex-direction:column;gap:6px">${daysControl}<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${receiptBtn}<span style="color:#a6ff00;font-weight:800;font-size:11px">${!isPaid?'':'Paid ₦'+amt.toLocaleString()}</span>${!isPaid?markPaidBtn:''}</div><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${cardBtn}${pausePlayBtn}${cancelBtn}</div></div>`;
-      if(diff!==null && diff<0 && !isPaused){ expired++;expiredHTML+=`<tr><td>${m.name}<br><small style="color:#666">${m.phone}</small></td><td>${m.phone}</td><td>${displayPlan}</td><td><span style="background:#222;padding:2px 6px;border-radius:5px;font-size:11px;color:${String(m.branch||'').toLowerCase().includes('enugu')?'#ffaa00':'#a6ff00'}">${m.branch||'—'}</span></td><td>${expiry?expiry.toDateString().slice(4):'Expired'}</td><td style="color:red">Expired</td><td>${actionCell}</td></tr>`; }else{ active++;const statusBadge=isPaused?`<span style="color:#a6ff00">⏸️ Paused ${!isPaid?'(Pending)':''}</span>`:diff===0?`<span style="color:#ffaa00">Today</span>`:`<span style="color:#a6ff00">● Active</span>`; activeHTML+=`<tr><td>${m.name}<br><small style="color:#666">${m.phone}<br>${m.membershipId||''}</small></td><td>${m.phone}</td><td>${displayPlan}</td><td><span style="background:#222;padding:2px 6px;border-radius:5px;font-size:11px;color:${String(m.branch||'').toLowerCase().includes('enugu')?'#ffaa00':'#a6ff00'}">${m.branch||'—'}</span></td><td>${expiryDisplay}</td><td>${statusBadge}</td><td>${actionCell}</td></tr>`; if(diff===0&&!isPaused){soon++;todayHTML+=`<tr><td>${m.name}</td><td>${m.phone}</td><td>${displayPlan}</td><td>${m.branch||'—'}</td><td>${actionCell}</td></tr>`;} }
+      if(!isPaid){cancelBtn=`<button class="btn-cancel" onclick="cancelMember('${m.phone}',this)">Cancel</button>`;markPaidBtn=`<button class="btn-paid" onclick="markAsPaid('${m.phone}','${m.plan}','${m.branch||''}',this,'${m.membershipId||''}')">Mark Paid ₦${priceForBtn.toLocaleString()}</button>`}else{markPaidBtn=`<span style="color:#9AA0C0;font-weight:700">Paid ₦${amt.toLocaleString()}</span>`}
+     let pausePlayBtn="";
+if(isPaused){ 
+  if(!isPaid){ 
+    pausePlayBtn=`<button class="icon-btn" disabled style="opacity:0.2">▶️</button> <small style="color:#ffaa00">Locked</small>`; 
+  } else { 
+    pausePlayBtn=`<button class="icon-btn" onclick="playMember('${m.phone}', '${m.membershipId || ''}', this)">▶️</button>`; 
+  } 
+} else { 
+  pausePlayBtn=`<button class="icon-btn" onclick="pauseMember('${m.phone}', '${m.membershipId || ''}', this)">⏸️</button>`; 
+}
+      const actionCell=`<div style="display:flex;flex-direction:column;gap:6px">${daysControl}<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${receiptBtn}<span style="color:#9AA0C0;font-weight:800;font-size:11px">${!isPaid?'':'Paid ₦'+amt.toLocaleString()}</span>${!isPaid?markPaidBtn:''}</div><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${cardBtn}${pausePlayBtn}${cancelBtn}</div></div>`;
+      if(diff!==null && diff<0 && !isPaused){ expired++;expiredHTML+=`<tr><td>${m.name}<br><small style="color:#666">${m.phone}</small></td><td>${m.phone}</td><td>${displayPlan}</td><td><span style="background:#222;padding:2px 6px;border-radius:5px;font-size:11px;color:${String(m.branch||'').toLowerCase().includes('enugu')?'#ffaa00':'#9AA0C0'}">${m.branch||'—'}</span></td><td>${expiry?expiry.toDateString().slice(4):'Expired'}</td><td style="color:red">Expired</td><td>${actionCell}</td></tr>`; }else{ active++;const statusBadge=isPaused?`<span style="color:#9AA0C0">⏸️ Paused ${!isPaid?'(Pending)':''}</span>`:diff===0?`<span style="color:#ffaa00">Today</span>`:`<span style="color:#9AA0C0">● Active</span>`; activeHTML+=`<tr><td>${m.name}<br><small style="color:#666">${m.phone}<br>${m.membershipId||''}</small></td><td>${m.phone}</td><td>${displayPlan}</td><td><span style="background:#222;padding:2px 6px;border-radius:5px;font-size:11px;color:${String(m.branch||'').toLowerCase().includes('enugu')?'#ffaa00':'#9AA0C0'}">${m.branch||'—'}</span></td><td>${expiryDisplay}</td><td>${statusBadge}</td><td>${actionCell}</td></tr>`; if(diff===0&&!isPaused){soon++;todayHTML+=`<tr><td>${m.name}</td><td>${m.phone}</td><td>${displayPlan}</td><td>${m.branch||'—'}</td><td>${actionCell}</td></tr>`;} }
     });
     document.getElementById('todayTable').querySelector('tbody').innerHTML=todayHTML||`<tr><td colspan="4" style="color:#666">No one</td></tr>`;
     document.getElementById('activeTable').querySelector('tbody').innerHTML=activeHTML||`<tr><td colspan="6" style="color:#666">No active</td></tr>`;
@@ -451,6 +596,110 @@ async function loadMembers(){
     if(document.getElementById('search').value)filterTable();
   }catch(e){document.querySelectorAll('tbody').forEach(tb=>tb.innerHTML=`<tr><td colspan="6">Error: ${e.message}</td></tr>`)}
 }
+
+const UMUAGU_BLUE = '#0A0A8A';
+
+window.openFullCard = function(m){
+  const profile = m.profile || 'https://ui-avatars.com/api/?name=U&background=0A0A8A&color=9AA0C0&size=300';
+  const qr = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=0A0A8A&data=${m.membershipId||m.phone||'test'}`;
+
+  document.getElementById('umuaguCard').innerHTML = `
+    <div style="margin-top:20px;text-align:center">
+      <div style="font-weight:900;color:${UMUAGU_BLUE};font-size:64px;line-height:0.8">UA</div>
+      <div style="font-weight:900;color:${UMUAGU_BLUE};font-size:26px;margin-top:8px">UMUAGU GYM</div>
+      <div style="background:#9AA0C0;color:${UMUAGU_BLUE};padding:6px 18px;border-radius:20px;font-size:12px;font-weight:700;margin-top:10px;display:inline-block;box-shadow:0 4px 12px rgba(10,10,138,0.1)">PREMIUM MEMBER</div>
+    </div>
+    <img id="cardProfileImg" src="${profile}" style="width:130px;height:130px;border-radius:50%;border:4px solid ${UMUAGU_BLUE};margin-top:24px;object-fit:cover;background:#9AA0C0" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name||'U')}&background=0A0A8A&color=9AA0C0&size=300&bold=true'">
+    <div style="width:100%;max-width:400px;margin-top:28px">
+      <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Name</span><b style="color:${UMUAGU_BLUE}">${m.name||''}</b></div>
+      <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Membership ID</span><b style="color:${UMUAGU_BLUE}">${m.membershipId||''}</b></div>
+      <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Plan</span><b style="color:${UMUAGU_BLUE}">${m.plan||''}</b></div>
+      <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Expiry</span><b style="color:${UMUAGU_BLUE}">${m.expiry||''}</b></div>
+    </div>
+    <div style="background:#9AA0C09AA0C0;border-radius:24px;padding:18px;margin-top:18px;box-shadow:0 10px 28px rgba(0,0,0,0.08);text-align:center">
+      <img src="${qr}" style="width:140px;height:140px"><div style="color:${UMUAGU_BLUE};font-size:9px;margin-top:8px;font-weight:700">SCAN AT ENTRY • ${m.expiry||''}</div>
+    </div>
+    <div style="width:100%;max-width:400px;display:flex;gap:12px;margin-top:28px;padding-bottom:30px">
+      <button onclick="document.getElementById('umuagu-fullscreen').style.display='none'" style="flex:1;padding:16px;border-radius:16px;border:1.5px solid ${UMUAGU_BLUE};background:#9AA0C0;color:${UMUAGU_BLUE};font-weight:800">CLOSE</button>
+      <button id="shareBtn" style="flex:1;padding:16px;border-radius:16px;background:${UMUAGU_BLUE};color:#9AA0C0;font-weight:800;border:0">SEND TO WHATSAPP 📲</button>
+    </div>
+  `;
+
+  document.getElementById('umuagu-fullscreen').style.display='block';
+  
+  document.getElementById('shareBtn').onclick = async function(){
+    const btn = this;
+    btn.innerText = '⏳ Creating...';
+    btn.disabled = true;
+    try{
+      const imgEl = document.getElementById('cardProfileImg');
+      // Force base64 for download - use canvas to convert
+      if(imgEl && imgEl.src && !imgEl.src.startsWith('data:')){
+        await new Promise((resolve)=>{
+          if(imgEl.complete) resolve();
+          else { imgEl.onload = resolve; imgEl.onerror = resolve; }
+        });
+        try{
+          const c = document.createElement('canvas');
+          c.width = 300; c.height = 300;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(imgEl, 0, 0, 300, 300);
+          imgEl.src = c.toDataURL('image/jpeg', 0.9);
+          await new Promise(r=>setTimeout(r,300));
+        }catch(e){ console.log('convert failed', e); }
+      }
+
+      const el = document.getElementById('umuaguCard');
+      const canvas = await html2canvas(el, {
+        scale: 2, 
+        backgroundColor: '#F5F6FB',
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      });
+      
+      canvas.toBlob(async(blob)=>{
+        const file = new File([blob], `UMUAGU-${m.membershipId||'card'}.png`, {type:'image/png'});
+        if(navigator.canShare && navigator.canShare({files:[file]})){
+          await navigator.share({files:[file], title:'UMUAGU Card'});
+        } else {
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement('a'); a.href=url; a.download=file.name; a.click();
+          setTimeout(()=>URL.revokeObjectURL(url), 1000);
+          const waNum = String(m.phone||'').replace(/[^0-9]/g,'').replace(/^0/,'234');
+          if(waNum) window.open('https://wa.me/'+waNum,'_blank');
+        }
+        btn.innerText = 'SEND TO WHATSAPP 📲';
+        btn.disabled = false;
+      }, 'image/png', 1.0);
+    }catch(err){
+      btn.innerText = 'SEND TO WHATSAPP 📲';
+      btn.disabled = false;
+      alert('Error: '+err.message);
+    }
+  };
+};
+
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('.wa-card-btn');
+  if(!btn || btn.disabled) return;
+  
+  const id = btn.dataset.id;
+  const all = window.allMembers || rawDataCache || [];
+  let real = all.find(x => (x.membershipId||'') == id) || all.find(x => String(x.membershipId||'').trim() === String(id).trim()) || {};
+
+  let photo = getMemberPhoto(real);
+  console.log('PHOTO URL:', photo);
+
+  window.openFullCard({
+    name: real.name || 'Member',
+    phone: real.phone || '',
+    plan: real.plan || real.planDisplay || '',
+    expiry: real.expiry || real.expiryDate || real.originalExpiry || '',
+    profile: photo,
+    membershipId: id
+  });
+});
 </script>
 </body>
 </html>

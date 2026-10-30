@@ -8,14 +8,13 @@ function updateOpenStatus(){
   const hour = now.getHours();
   const min = now.getMinutes();
   const time = hour + min/60;
-  const isOpen = (time >= 7 && time < 11) || (time >= 15 && time < 19);
+  const isOpen = (time >= 7 && time <= 21);
   if(isOpen){
-    el.innerHTML = "🟢 Open Now - Closes 7PM";
+    el.innerHTML = "🟢 Open Now";
     el.style.color = "#a6ff00";
   } else {
     let next = "";
     if(time < 7) next = "Opens 7AM today";
-    else if(time < 15) next = "Opens 3PM today";
     else next = "Opens 7AM tomorrow";
     el.innerHTML = `🔴 Closed - ${next}`;
     el.style.color = "red";
@@ -111,14 +110,34 @@ function profilePicked(input){
   const el=document.getElementById('profileName');
   const label=document.getElementById('profileLabel');
   if(el && input.files[0]){
-    el.textContent = "✅ " + input.files[0].name;
-    if(input.files[0].type.startsWith('image/')){
+    const file = input.files[0];
+    el.textContent = "✅ " + file.name;
+    if(file.type.startsWith('image/')){
       const reader = new FileReader();
       reader.onload = e => {
-        label.innerHTML = `<img src="${e.target.result}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #a6ff00"><br>✅ Photo selected`;
-        localStorage.setItem('tempProfilePic', e.target.result);
+        const img = new Image();
+        img.onload = () => {
+          // Compress to 300x300 JPEG 0.6 (~15KB) for Sheet + Drive
+          const canvas = document.createElement('canvas');
+          canvas.width = 300; canvas.height = 300;
+          const ctx = canvas.getContext('2d');
+          const size = Math.min(img.width, img.height);
+          const x = (img.width - size)/2;
+          const y = (img.height - size)/2;
+          ctx.drawImage(img, x, y, size, size, 0, 0, 300, 300);
+          const compressed = canvas.toDataURL('image/jpeg', 0.6);
+          
+          label.innerHTML = `<img src="${compressed}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #a6ff00"><br>✅ Photo ready`;
+          
+          // Save BOTH formats
+          localStorage.setItem('tempProfilePic', compressed); // for preview
+          localStorage.setItem('tempProfilePicForSheet', compressed); // for Sheet upload
+          
+          console.log('Photo compressed:', Math.round(compressed.length/1024)+'KB - ready to upload');
+        };
+        img.src = e.target.result;
       };
-      reader.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(file);
     }
   }
 }
@@ -301,14 +320,21 @@ async function validateForm(e){
       profileObj = { name: profileFile.name, mime: profileFile.type, data: base64P };
     }
 
+    const savedPhoto = localStorage.getItem('tempProfilePicForSheet') || localStorage.getItem('tempProfilePic') || '';
     const data = {
       name: name, phone: phone,
       branch: selectedBranch,
       email: email || `${cleanPhone(phone)}@ironcity.com`,
       session: sess, plan: plan, goal: goal, payMethod: payMethod,
       price: price, amount: price, expiry: expiryDate, receipt: receiptObj,
-      profilePic: profileObj,
       isTopUp: isTopUp,
+  ProfilePic: savedPhoto, // new format - string
+  profilePic: savedPhoto ? {
+    data: savedPhoto.split('base64,')[1],
+    mime: 'image/jpeg',
+    name: 'profile_'+phone+'.jpg'
+  } : null // old format - object - send both to be safe
+
     };
 
     await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });

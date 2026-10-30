@@ -4,14 +4,14 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UMUAGU GYM - Registration Received</title>
 <style>
-:root{--neon:#a6ff00;--bg:#0f1115;--card:#1a1e26}
+:root{--neon:#fff;--bg:#0f1115;--card:#1a1e26}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:#fff;padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh}
 .card-wrap{max-width:400px;width:100%}
-.box{background:#111;border:2px solid #a6ff00;border-radius:20px;padding:25px;text-align:center}
+.box{background:#111;border:2px solid #fff;border-radius:20px;padding:25px;text-align:center}
 .info{background:#000;border-radius:12px;padding:15px;text-align:left;font-size:14px;line-height:1.8;margin:15px 0}
 .btn{width:100%;background:var(--neon);color:#000;padding:14px;border-radius:12px;font-weight:900;border:none;margin-top:10px;cursor:pointer;display:block;text-align:center;text-decoration:none}
-.btn-outline{background:transparent;border:1.5px solid var(--neon);color:var(--neon)}
+.btn-outline{background:#000080;color:var(--neon)}
 .badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:900;display:inline-block}
 </style>
 </head>
@@ -19,13 +19,13 @@ body{background:var(--bg);color:#fff;padding:20px;display:flex;justify-content:c
 <div class="card-wrap">
   <div class="box" id="mainBox">
     <div style="font-size:50px" id="icon">✅</div>
-    <h2 style="color:#a6ff00;margin:15px 0" id="title">Registration Received!</h2>
+    <h2 style="color:#fff;margin:15px 0" id="title">Registration Received!</h2>
     <div class="info" id="info"></div>
-    <div id="payGymExtra" style="display:none;background:#1a1e26;border:1.5px dashed orange;border-radius:12px;padding:12px;margin:10px 0;font-size:13px">
-      <b style="color:orange">⚠️ Collect your CARD at gym when you pay</b><br><small>NO 1, COURT ROAD GRA, TOTAL ROUND-ABOUT, NSUKKA<br>Open: 7AM-8PM</small>
+    <div id="payGymExtra" style="display:none;background:#1a1e26;border:1.5px dashed #000080;border-radius:12px;padding:12px;margin:10px 0;font-size:13px">
+      <b style="color:#000080">⚠️ Collect your CARD at gym when you pay</b><br><small>NO 1, COURT ROAD GRA, TOTAL ROUND-ABOUT, NSUKKA<br>Open: 7AM-8PM</small>
     </div>
-    <div id="payNowExtra" style="display:none;background:#121a00;border:1.5px solid #a6ff00;border-radius:12px;padding:12px;margin:10px 0;font-size:13px">
-      <b style="color:#a6ff00">⏳ Payment Processing</b><br><small>We will confirm your payment shortly.<br>You will receive your CARD after admin approval.</small>
+    <div id="payNowExtra" style="display:none;background:#121a00;border:1.5px solid #fff;border-radius:12px;padding:12px;margin:10px 0;font-size:13px">
+      <b style="color:#fff">⏳ Payment Processing</b><br><small>We will confirm your payment shortly.<br>You will receive your CARD after admin approval.</small>
     </div>
     <div id="renewExtra" style="display:none;background:#0f1115;border:1px solid #333;border-radius:12px;padding:12px;margin:10px 0;font-size:12px;color:#8a8f98"></div>
     <a href="index.html" class="btn btn-outline">Back to Home</a>
@@ -43,19 +43,19 @@ const isTopUp=p.get('isTopUp')==='true';
 const isPayAtGym=payMethod.toLowerCase().includes('gym');
 
 document.getElementById('info').innerHTML=`
-<div>Name: <b style="color:#a6ff00">${name}</b></div>
+<div>Name: <b style="color:#fff">${name}</b></div>
 <div>Phone: <b>${phone}</b></div>
 <div>Plan: <b>${plan}</b></div>
 <div>Branch: <b>${branch}</b></div>
-<div>Expiry: <b style="color:orange">${expiry}</b> (after approval)</div>
-<div>Status: <span class="badge" style="background:orange;color:#000">PENDING APPROVAL</span></div>
+<div>Expiry: <b style="color:#000080">${expiry}</b> (after approval)</div>
+<div>Status: <span class="badge" style="background:#000080;color:#000">PENDING APPROVAL</span></div>
 <div>Pay Method: <b>${payMethod}</b></div>
 `;
 
 if(isTopUp){
   document.getElementById('title').innerText='Renewal Received!';
   document.getElementById('renewExtra').style.display='block';
-  document.getElementById('renewExtra').innerHTML=`Thanks for renewing! Your NEW expiry <b style="color:#a6ff00">${expiry}</b> is noted.<br><br><small>Admin will confirm and your card will be updated after payment approval. Expiry does NOT move in system until payment is approved.</small>`;
+  document.getElementById('renewExtra').innerHTML=`Thanks for renewing! Your NEW expiry <b style="color:#fff">${expiry}</b> is noted.<br><br><small>Admin will confirm and your card will be updated after payment approval. Expiry does NOT move in system until payment is approved.</small>`;
 }
 
 if(isPayAtGym){
