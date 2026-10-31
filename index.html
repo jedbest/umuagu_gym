@@ -28,13 +28,13 @@
     <img src="images/hero.png">
     <div class="hero-overlay">
       <div class="top-bar">
-        <p class="small-neon" style="color:#fff;font-weight:900;font-size:11px;margin:0">NSUKKA'S HARDEST GYM</p>
+
         <button class="btn-join-small" onclick="showPage('register', document.querySelector(`.bottom-nav button[onclick*='register']`))">Join Now</button>
       </div>
       <div>
         <h1 style="font-size:30px;line-height:0.95;margin:0">BUILD YOUR <span style="color:#0312e2">STRENGTH</span></h1>
         <div class="card time-card" style="margin:10px 0 0 0;background:rgba(17,17,17,0.9);backdrop-filter:blur(4px)"><div class="time-row"><div>🌅 Morning<br><b>7AM - 11AM</b></div><div>🌇 Evening<br><b>3PM - 8PM</b></div></div><div class="time-note">Monday - Saturday • Closed Sunday & 11AM-3PM</div></div>
-        <p class="muted" style="font-size:11px;margin-top:8px;color:#aaa">No fake weights. Real coaches. NO 1, COURT ROAD GRA, TOTAL ROUND-ABOUT, NSUKKA.</p>
+        <p class="muted" style="font-size:11px;margin-top:8px;color:#aaa">No fake weights. Real coaches. NO 1, COURT ROAD GRA, TOTAL ROUND-ABOUT, NSUKKA. & ENUGU</p>
       </div>
     </div>
   </div>
@@ -73,14 +73,14 @@
   <div style="display:flex;flex-direction:column;gap:10px;margin:25px 0">
     <button class="btn" onclick="showPage('register', document.querySelector(`.bottom-nav button[onclick*='register']`))" style="width:100%;padding:15px;font-size:15px;border-radius:12px">Join UMUAGU Now →</button>
    <div style="display: flex; justify-content: center; gap: 30px;">
-    <button href="https://www.google.com/maps/dir/?api=1&destination=Ogige+Main+Market+Nsukka" target="_blank" style="background:#fff;border:1.5px solid #333;color:#000080;padding:12px;border-radius:10px;font-weight:700;text-decoration:none;text-align:center;font-size:12px">📍 Map Nsukka</button>
+    <button href="https://maps.app.goo.gl/bZsiEr8pqobbHiCG6" target="_blank" style="background:#fff;border:1.5px solid #333;color:#000080;padding:12px;border-radius:10px;font-weight:700;text-decoration:none;text-align:center;font-size:12px">📍 Map Nsukka</button>
       <button href="https://www.google.com/maps/dir/?api=1&destination=Ogige+Main+Market+Nsukka" target="_blank" style="background:#fff;border:1.5px solid #333;color: #000080;;padding:12px;border-radius:10px;font-weight:700;text-decoration:none;text-align:center;font-size:12px">📍 Map Enugu</button>
   </div>
   </div>
 </div>
 
 <div id="plans" class="page">
- <h2>CHOOSE YOUR <span class="neon">PLAN</span></h2><p class="muted-sm">Open 7-11AM & 3-8PM daily</p>
+ <h2>CHOOSE YOUR <span class="neon">PLAN</span></h2><p class="muted-sm">Open 7AM-9PM daily</p>
   <div class="card plan-card" onclick="selectPlan(this,'Daily Without Coaching')"><h3>Daily • Without Coaching</h3><div class="price">₦1,500 / day</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'Daily With Coaching')"><span class="badge">BEGINNER FRIENDLY</span><h3>Daily • With Coaching</h3><div class="price">₦2,500 / day</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'Weekly Without Coaching')"><h3>Weekly • Without Coaching</h3><div class="price">₦7,000 / week</div></div>
@@ -93,22 +93,22 @@
 
 <div id="register" class="page">
   <h2 class="neon">GYM REGISTRATION</h2>
-  <div class="card time-card small"><b>⏰ Open: 7-8PM Daily</b></div>
+  <div class="card time-card small"><b>⏰ Open: 7AM-8PM Daily</b></div>
   <form id="gymForm" onsubmit="return validateForm(event)">
     <label>PROFILE PICTURE (Face) *</label>
     <div id="profileBox" style="border:2px dashed #333;border-radius:12px;padding:12px;text-align:center;background:#111">
   <div id="profileLabel" style="margin-bottom:8px;color:#aaa">📸 Profile Photo for ID Card</div>
-  <img id="profilePreview" src="" style="display:none;width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid #a6ff00;margin:0 auto 10px">
+  <img id="profilePreview" src="" style="display:none;width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin:0 auto 10px">
   <video id="camPreview" autoplay playsinline style="display:none;width:100%;max-width:260px;border-radius:12px;margin:0 auto 10px"></video>
   <canvas id="camCanvas" style="display:none"></canvas>
   
   <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
     <label for="profilePic" style="background:#222;border:1px solid #444;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;color:#fff">📁 Upload</label>
     <button type="button" id="btnOpenCam" onclick="openCamera()" style="background:#222;border:1px solid #444;padding:8px 12px;border-radius:8px;font-size:13px;color:#fff">📷 Camera</button>
-    <button type="button" id="btnCapture" onclick="capturePhoto()" style="display:none;background:#a6ff00;color:#000;padding:8px 12px;border-radius:8px;font-weight:800;border:none">✅ Capture</button>
+    <button type="button" id="btnCapture" onclick="capturePhoto()" style="display:none;background:#fff;color:#000;padding:8px 12px;border-radius:8px;font-weight:800;border:none">✅ Capture</button>
     <button type="button" id="btnCloseCam" onclick="closeCamera()" style="display:none;background:#333;color:#fff;padding:8px 12px;border-radius:8px;border:none">✖ Close</button>
   </div>
-  <div id="profileName" style="margin-top:8px;font-size:12px;color:#a6ff00"></div>
+  <div id="profileName" style="margin-top:8px;font-size:12px;color:#fff"></div>
   <input type="file" id="profilePic" accept="image/*" style="display:none" onchange="profilePicked(this)" required>
 </div>
     <label>FULL NAME *</label><input type="text" id="fullName" placeholder="Alex Morgan" required>
@@ -130,9 +130,10 @@
       <label class="pay-card" id="cardNow"><input type="radio" name="pay" value="now" onchange="togglePay()"><span>💳</span><b>Pay Immediately</b><small>Transfer & upload receipt</small></label>
     </div>
 
+
     <div id="payNowBox" style="display:none" class="card pay-box">
       <b style="color:#9aa0c0">Bank Details for Transfer</b><br>
-      Bank: OPAY<br>Account: 1234567890<br>Name: IRONCITY GYM<br>Amount: <span id="showAmount">Select plan first</span><br><br>
+      Bank: Moniepoint MFB<br>Account: 7060495410<br>Name: Solidbody Apparel Ltd<br>Amount: <span id="showAmount">Check Beside plan for Amount</span><br><br>
       <label>UPLOAD RECEIPT *</label>
       <div class="upload-area" onclick="document.getElementById('receipt').click()">
         <input type="file" id="receipt" accept="image/*,.pdf" hidden onchange="filePicked(this)">
@@ -155,9 +156,8 @@
   <div class="about-hero-full">
     <img src="images/hero_member.png">
     <div class="about-hero-overlay">
-      <span class="eyebrow" style="color: #fff;">NSUKKA'S HARDEST GYM</span>
-      <h1>WE NO BE <span>REGULAR GYM</span></h1>
-      <p>Behind Ogige Main Market, we built IronCity with one rule: No fake weights, real results.</p>
+      <h1>WE ARE NOT <span>REGULAR GYM</span></h1>
+      <p>Court Road GRA, Total Round-about, Nsukka. & Enugu, we built Umuagu with one rule: No fake weights, real results.</p>
     </div>
   </div>
 
@@ -172,8 +172,8 @@
 
   <div class="card story-card" style="margin-top: 50px; margin-bottom: 50px;">
     <div class="label">01 / OUR STORY</div>
-    <h3>WHY WE STARTED FOR NSUKKA</h3>
-    <p class="about-text">IRONCITY started 2021 behind Ogige. We see say for Nsukka, many gyms dey use fake plates, coach dey press phone. So we create our own corner - heavy iron, real coaches wey dey watch your form, community wey dey push you. From student to businessman, everybody dey train together.</p>
+    <h3>WHY WE STARTED A GYM</h3>
+    <p class="about-text">UMUAGU started 2021. We see that many gyms use fake plates, coaches press their phone during sessions. So we created our own corner - heavy iron, real coaches watchimg your form, community that push you. From student to businessman, everybody trains together.</p>
     <div class="about-mini-gallery">
       <img src="images/members2.png">
       <img src="images/members.png">
@@ -184,21 +184,21 @@
 
   <!-- STATS - people fit scroll -->
   <div class="stats-grid">
-    <div class="stat-box"><b>300+</b><span>Active Members</span></div>
+    <div class="stat-box"><b>50+</b><span>Active Members</span></div>
     <div class="stat-box"><b>4</b><span>Years Running</span></div>
-    <div class="stat-box"><b>3</b><span>Real Coaches</span></div>
+    <div class="stat-box"><b>2</b><span>Real Coaches</span></div>
     <div class="stat-box"><b>100%</b><span>Real Plates Only</span></div>
   </div>
 
   <!-- WHAT MAKES US DIFFERENT -->
   <div class="card dark">
     <div class="label">02 / WHY PEOPLE TRUST US</div>
-    <h3>WHAT MAKES IRONCITY DIFFERENT</h3>
+    <h3>WHAT MAKES UMUAGU DIFFERENT</h3>
     <div class="diff-grid">
-      <div class="diff"><b>🏋️ No Fake Weights</b><p>All KG na real KG. Wetin you lift na wetin you lift.</p></div>
-      <div class="diff"><b>👊 Real Coaching</b><p>Coach dey correct form, not press phone.</p></div>
-      <div class="diff"><b>⏰ Built for Hustlers</b><p>Morning & Evening sessions, work fit enter.</p></div>
-      <div class="diff"><b>👕 Community</b><p>Wear IRONCITY for Nsukka, people sabi you.</p></div>
+      <div class="diff"><b>🏋️ No Fake Weights</b><p>All KGs are real KGs. What you lift is what you lift.</p></div>
+      <div class="diff"><b>👊 Real Coaching</b><p>Coach pay attention to you and what you need.</p></div>
+      <div class="diff"><b>⏰ Built for Hustlers</b><p>Morning to Evening sessions, Anytime.</p></div>
+      <div class="diff"><b>👕 Community</b><p>We do things together.</p></div>
     </div>
   </div>
 
@@ -206,25 +206,26 @@
   <div class="card">
     <div class="label">03 / COACHING</div>
     <h3>COACHES WEY DEY FOR YOU</h3>
-    <p class="about-text">No be YouTube coaching. One-on-one guidance, fat burn plan, strength plan, diet guide wey follow Nsukka food - not imported diet wey you no fit afford.</p>
+    <p class="about-text"> One-on-one guidance, fat burn plan, strength plan, diet guide that follow Nsukka / Enugu food - not imported diet you wouldnt be able to afford.</p>
     <div class="coach-tags"><span>Personal Coaching</span><span>Fat Loss</span><span>Strength</span><span>Diet Plan</span></div>
   </div>
 
   <!-- CORE VALUES & MISSION -->
   <div class="card dark">
     <div class="label">04 / CORE VALUES & MISSION</div>
-    <h3>MAKE NSUKKA THE HARDEST CITY</h3>
-    <p class="about-text light">Our mission no be to be biggest gym for Nigeria. Na to make every person wey enter IronCity comot stronger, disciplined - body and mindset. Discipline. Real Work. No Excuse.</p>
+    <h3>MAKE YOU THE BEST VERSION OF YOURSELF</h3>
+    <p class="about-text light">Our mission is not to be biggest gym for Nigeria. It is to make every person that enters Umuagu to go stronger, disciplined - body and mindset. Discipline. Real Work. No Excuse.</p>
     <div class="values">
       <div><b>01</b> Discipline</div>
       <div><b>02</b> Real Work</div>
       <div><b>03</b> Brotherhood</div>
     </div>
-    <button class="btn-join-about" onclick="showPage('register', document.querySelector(`.bottom-nav button[onclick*='register']`))">Join IronCity Now →</button>
+    <button class="btn-join-about" onclick="showPage('register', document.querySelector(`.bottom-nav button[onclick*='register']`))">Join Umuagu Now →</button>
   </div>
 
-  <div style="display: flex; justify-content: center;">
-    <a href="https://www.google.com/maps/dir/?api=1&destination=Ogige+Main+Market+Nsukka" target="_blank" class="map-btn">📍 BEHIND OGIGE MAIN MARKET - MAP</a>
+  <div style="display: flex; justify-content: center; gap: 30px;">
+    <a href="https://maps.app.goo.gl/bZsiEr8pqobbHiCG6" target="_blank" class="map-btn">📍MAP Nsukka</a>
+     <a href="https://www.google.com/maps/dir/?api=1&destination=Ogige+Main+Market+Nsukka" target="_blank" class="map-btn">📍MAP Enugu</a>
   </div>
 </div>
 
@@ -233,7 +234,7 @@
   
   <div class="card time-card">
     <h3>📍 Visit Us</h3>
-    <p>NO 1, COURT ROAD GRA, TOTAL ROUND-ABOUT, NSUKKA</p>
+    <p>NO 1, COURT ROAD GRA, TOTAL ROUND-ABOUT, NSUKKA  & ENUGU</p>
     <div class="time-row">
       <div>🌅 <b>7AM-8PM</b></div>
       <div><b>Excluding Sundays</b></div>
@@ -245,31 +246,31 @@
     <div class="social-grid">
 
       <!-- CALL - Main Call Logo -->
-      <a href="tel:09134435650" class="social-box call">
+      <a href="tel:09015652929" class="social-box call">
         <i class="fa-solid fa-phone"></i>
         <span>CALL</span>
       </a>
 
       <!-- WHATSAPP - Main WhatsApp Logo -->
-      <a href="https://wa.me/2349134435650" target="_blank" class="social-box whatsapp">
+      <a href="https://wa.me/09015652929" target="_blank" class="social-box whatsapp">
         <i class="fa-brands fa-whatsapp"></i>
         <span>WHATSAPP</span>
       </a>
 
       <!-- FACEBOOK - Main Facebook Logo -->
-      <a href="https://facebook.com/" target="_blank" class="social-box facebook">
+      <a href="https://www.facebook.com/share/1CA54zxKcm/?mibextid=wwXIfr" target="_blank" class="social-box facebook">
         <i class="fa-brands fa-facebook-f"></i>
         <span>FACEBOOK</span>
       </a>
 
       <!-- INSTAGRAM - Main Instagram Logo -->
-      <a href="https://instagram.com/" target="_blank" class="social-box instagram">
+      <a href="https://www.instagram.com/solidbody_gym?rpxt=YWpmN2luNGhlZ2V6&utm_source=qr" target="_blank" class="social-box instagram">
         <i class="fa-brands fa-instagram"></i>
         <span>INSTAGRAM</span>
       </a>
 
       <!-- TIKTOK - Main TikTok Logo -->
-      <a href="https://tiktok.com/" target="_blank" class="social-box tiktok">
+      <a href="https://www.tiktok.com/@solidbody.gym?_r=1&_t=ZG-9Aw5d6qICiO" target="_blank" class="social-box tiktok">
         <i class="fa-brands fa-tiktok"></i>
         <span>TIKTOK</span>
       </a>
@@ -281,7 +282,7 @@
       </a>
 
       <!-- MAP - Main Map Logo -->
-      <a href="https://www.google.com/maps/dir/?api=1&destination=Ogige+Main+Market+Nsukka" target="_blank" class="social-box map">
+      <a href="https://maps.app.goo.gl/bZsiEr8pqobbHiCG6" target="_blank" class="social-box map">
         <i class="fa-solid fa-location-dot"></i>
         <span>MAP NSUKKA</span>
       </a>

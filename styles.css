@@ -78,7 +78,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--logo-blue)} label{fon
 .upload-area{border:2px dashed var(--logo-blue);border-radius:12px;padding:18px;text-align:center;cursor:pointer;background:#0f1115}
 .tiny{text-align:center;color:var(--muted);font-size:11px}.about-text{color:var(--muted);font-size:13px}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0a;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0}
-.bottom-nav button{background:none;border:none;color:var(--muted);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bottom-nav button{background:none;border:none;color:var(--TEXT);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px}
 .bottom-nav button.active{color:var(--logo-blue)}
 @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
@@ -97,7 +97,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--logo-blue)} label{fon
 #home .hero-old > img{width:100% !important;height:380px !important;object-fit:cover !important;object-position:top center !important;display:block !important}
 #home .hero-overlay{position:absolute !important;inset:0 !important;background:linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 80%) !important;padding:16px !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important}
 #home .top-bar{display:flex !important;justify-content:space-between !important;align-items:center !important}
-#home .btn-join-small{background:#ffffff !important;color:var(--logo-blue) !important;border:none !important;padding:8px 14px !important;border-radius:8px !important;font-weight:900 !important;font-size:13px !important}
+#home .btn-join-small{background:#ffffff !important;color:var(--logo-blue) !important;border:none !important;padding:8px 14px !important;border-radius:8px !important;font-weight:900 !important;font-size:15px !important}
 #home .section{margin:40px 0 !important;padding:8px 2px 0 2px !important}
 #home .section h2{color:var(--text) !important;font-size:18px !important;font-weight:900 !important;margin-bottom:10px !important}
 #home .offer-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:10px !important}
