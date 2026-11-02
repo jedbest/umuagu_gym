@@ -92,7 +92,7 @@ td small{font-size:11.5px}
   cursor:pointer;
   flex-shrink:0;
 }
-.btn-green{background-color: #000080; color: #9AA0C0;}
+.btn-green{background-color: #000080; color: #FFF;}
 .days-control , .days-control button:last-child{
   width:auto !important;
   padding:0 10px;
@@ -112,7 +112,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 </head>
 <body>
 <div id="loginBox">
-  <div style="color:#9AA0C0;font-weight:900;font-size:20px">🔒 ADMIN LOGIN</div>
+  <div style="color:#FFF;font-weight:900;font-size:20px">🔒 ADMIN LOGIN</div>
   <div style="color:#666;font-size:12px;margin-bottom:15px">UMUAGU GYM ONLY</div>
   <div class="pass-wrap">
     <input type="password" id="passInput" placeholder="Enter Password" class="search" style="margin:0 0 10px 0" autocomplete="off">
@@ -191,15 +191,15 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAFf3X3DanenKP1qvQD
 const LOGINS = {
   "NSUKKA2024": { branch: "Nsukka", role: "admin", name: "Nsukka Admin" },
   "ENUGU2024": { branch: "Enugu", role: "admin", name: "Enugu Admin" },
-  "IronCity2024": { branch: "All", role: "owner", name: "Owner" }
+  "UMUAGU2024": { branch: "All", role: "owner", name: "Owner" }
 };
 
 let currentLogin = null;
 
 function logout(){
-  localStorage.removeItem('ironcity_admin');
-  localStorage.removeItem('ironcity_role');
-  localStorage.removeItem('ironcity_branch');
+  localStorage.removeItem('umuagu_admin');
+  localStorage.removeItem('umuagu_role');
+  localStorage.removeItem('umuagu_branch');
   currentLogin = null;
   document.getElementById('passInput').value = "";
   document.getElementById('passStatus').innerHTML = "";
@@ -213,9 +213,9 @@ function checkPassword(){
   const pass = document.getElementById('passInput').value.trim();
   if(LOGINS[pass]){
     currentLogin = LOGINS[pass];
-    localStorage.setItem('ironcity_admin', pass);
-    localStorage.setItem('ironcity_role', currentLogin.role);
-    localStorage.setItem('ironcity_branch', currentLogin.branch);
+    localStorage.setItem('umuagu_admin', pass);
+    localStorage.setItem('umuagu_role', currentLogin.role);
+    localStorage.setItem('umuagu_branch', currentLogin.branch);
     showDashboard();
   } else {
     document.getElementById('loginError').innerText = "Wrong password! ❌";
@@ -273,7 +273,7 @@ passInput.addEventListener("input", () => {
 });
 
 // Auto login
-const saved = localStorage.getItem('ironcity_admin');
+const saved = localStorage.getItem('umuagu_admin');
 if(saved && LOGINS[saved]){
   currentLogin = LOGINS[saved];
   passInput.value = saved;
@@ -290,7 +290,7 @@ function getPriceFromPlan(plan){var p=String(plan||"").toLowerCase().trim();if(p
 function changeDays(id, delta){const inp=document.getElementById(id);let v=parseInt(inp.value)||0;v+=delta;if(v<1)v=1;if(v>365)v=365;inp.value=v}
 function viewReceipt(url){if(!url){alert('No receipt');return}const modal=document.getElementById('receiptModal');const content=document.getElementById('receiptContent');modal.style.display='flex';let displayUrl=url;if(url.includes('drive.google.com')&&url.includes('/view')){const id=url.match(/[-\w]{25,}/);if(id)displayUrl=`https://drive.google.com/file/d/${id[0]}/preview`;}if(url.toLowerCase().includes('.pdf')||displayUrl.includes('/preview')){content.innerHTML=`<iframe src="${displayUrl}" style="height:70vh"></iframe><br><a href="${url}" target="_blank" style="color:#9AA0C0;margin-top:10px;display:inline-block">Open</a>`;}else{content.innerHTML=`<img src="${displayUrl}" style="max-width:100%"><br><a href="${url}" target="_blank" style="color:#9AA0C0;margin-top:10px;display:inline-block">Open</a>`;}}
 function closeReceipt(){document.getElementById('receiptModal').style.display='none';}
-function generateAndSendCard(name,phone,plan,expiry,profilePic,membershipId){const clean=String(phone).replace(/[^0-9]/g,'');const wa=clean.startsWith('0')?'234'+clean.slice(1):clean;const id=membershipId||('IC-'+clean.slice(-4));const qr=`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=IRONCITY|${name}|${phone}|${plan}|${expiry}`;const text=`*IRONCITY GYM - CARD APPROVED* 💳\n\nName: ${name}\nPhone: ${phone}\nID: ${id}\nPlan: ${plan}\nExpires: ${expiry}\n\nQR: ${qr}\nShow at gate.`;window.open(`https://wa.me/${wa}?text=${encodeURIComponent(text)}`,'_blank');}
+function generateAndSendCard(name,phone,plan,expiry,profilePic,membershipId){const clean=String(phone).replace(/[^0-9]/g,'');const wa=clean.startsWith('0')?'234'+clean.slice(1):clean;const id=membershipId||('IC-'+clean.slice(-4));const qr=`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=UMUAGU|${name}|${phone}|${plan}|${expiry}`;const text=`*UMUAGU GYM - CARD APPROVED* 💳\n\nName: ${name}\nPhone: ${phone}\nID: ${id}\nPlan: ${plan}\nExpires: ${expiry}\n\nQR: ${qr}\nShow at gate.`;window.open(`https://wa.me/${wa}?text=${encodeURIComponent(text)}`,'_blank');}
 async function addDaysToMember(phone, inputId, btn, isWith){const days=parseInt(document.getElementById(inputId).value)||0;if(days<1){alert('Enter days');return}const pricePreview=getDynamicPriceAdmin(days, isWith);if(!confirm(`Add ${days} days to ${phone}? Price ₦${pricePreview.toLocaleString()} - Will be PAUSED until you Mark Paid + Play.`))return;if(btn){btn.innerText='...';btn.disabled=true}try{await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify({action:"addDays",phone:phone,days:days,isWith:isWith})});alert(`✅ Added ${days} days - Price ₦${pricePreview.toLocaleString()} - Now at TOP as PAUSED (—) - Mark Paid`);setTimeout(loadMembers,3500)}catch(e){alert('Error:'+e.message);if(btn){btn.innerText='Add';btn.disabled=false}}}
 async function pauseMember(phone, membershipId, btn){
   // Backward compatible: if second param is actually the button
@@ -446,22 +446,22 @@ async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase
     ctx.restore();
   }
   ctx.fillStyle="#9AA0C0"; ctx.font="bold 22px Arial"; ctx.fillText(name,160,70);
-  ctx.fillStyle="#9AA0C0"; ctx.font="14px Arial"; ctx.fillText((branch||"Iron City")+" | "+plan,160,95);
+  ctx.fillStyle="#9AA0C0"; ctx.font="14px Arial"; ctx.fillText((branch||"Umuagu")+" | "+plan,160,95);
   ctx.fillStyle="#ccc"; ctx.font="13px Arial"; ctx.fillText("Phone: "+phone,160,115);
   ctx.fillText("Expires: "+expiry,160,135);
   ctx.fillStyle="#9AA0C0"; ctx.fillRect(0,340,600,40);
-  ctx.fillStyle="#000"; ctx.font="bold 16px Arial"; ctx.fillText("IRON CITY GYM - Show this card at entrance",20,365);
-  
+  ctx.fillStyle="#000"; ctx.font="bold 16px Arial"; ctx.fillText("UMUAGU GYM - Show this card at entrance",20,365);
+
   canvas.toBlob(async (blob)=>{
     const file=new File([blob], name+"_ID.jpg", {type:"image/jpeg"});
     // Try native share with file (works on phone)
     if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({files:[file], title:"Iron City ID Card", text:`Hi ${name}, your ${plan} card - Expires ${expiry}`});
+      await navigator.share({files:[file], title:"Umuagu ID Card", text:`Hi ${name}, your ${plan} card - Expires ${expiry}`});
     }else{
       // fallback: download + open whatsapp
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a'); a.href=url; a.download=file.name; a.click();
-      const waText=encodeURIComponent(`Hi ${name} 💪\nYour *${plan}* ID card is ready!\nBranch: ${branch}\nExpires: ${expiry}\n\nShow this card at gym. - Iron City Gym`);
+      const waText=encodeURIComponent(`Hi ${name} 💪\nYour *${plan}* ID card is ready!\nBranch: ${branch}\nExpires: ${expiry}\n\nShow this card at gym. - Umuagu Gym`);
       window.open(`https://wa.me/234${phone.slice(-10)}?text=${waText}`,"_blank");
     }
   },"image/jpeg",0.9);
@@ -564,7 +564,7 @@ window.allMembers = filteredData; // <-- ADD THIS so card finds real member
 const BLUE = '#0A0A8A';
 
 // REPLACE your const cardBtn line with this:
-const cardBtn = `<button class="wa-card-btn" ${!isPaid?'disabled':''} data-id="${m.membershipId||m.phone||''}" style="background:${!isPaid?'#E5E7EB':'#0A0A8A'};color:${!isPaid?'#9CA3AF':'#9AA0C09AA0C0'};padding:8px 16px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:${!isPaid?'not-allowed':'pointer'}">💳 ${isPaid?'Send Card WA':'Card Locked'}</button>`;
+const cardBtn = `<button class="wa-card-btn" ${!isPaid?'disabled':''} data-id="${m.membershipId||m.phone||''}" style="background:${!isPaid?'#E5E7EB':'#0A0A8A'};color:${!isPaid?'#9CA3AF':'#fff'};padding:8px 16px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:${!isPaid?'not-allowed':'pointer'}">💳 ${isPaid?'Send Card WA':'Card Locked'}</button>`;
 
 
 
