@@ -613,10 +613,10 @@ window.openFullCard = function(m){
       <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Name</span><b style="color:${UMUAGU_BLUE}">${m.name||''}</b></div>
       <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Membership ID</span><b style="color:${UMUAGU_BLUE}">${m.membershipId||''}</b></div>
       <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Plan</span><b style="color:${UMUAGU_BLUE}">${m.plan||''}</b></div>
-      <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Expiry</span><b style="color:${UMUAGU_BLUE}">${m.expiry||''}</b></div>
+      <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Expiry</span><b style="color:${UMUAGU_BLUE}">${(function(d){ try{ const dt=new Date(d); return isNaN(dt)?d:dt.toDateString(); }catch(e){return d} })(m.expiry||'') }</b></div>
     </div>
     <div style="background:#9AA0C09AA0C0;border-radius:24px;padding:18px;margin-top:18px;box-shadow:0 10px 28px rgba(0,0,0,0.08);text-align:center">
-      <img src="${qr}" style="width:140px;height:140px"><div style="color:${UMUAGU_BLUE};font-size:9px;margin-top:8px;font-weight:700">SCAN AT ENTRY • ${m.expiry||''}</div>
+      <img src="${qr}" style="width:140px;height:140px"><div style="color:${UMUAGU_BLUE};font-size:9px;margin-top:8px;font-weight:700">SCAN AT ENTRY • ${(function(d){ try{ const dt=new Date(d); return isNaN(dt)?d:dt.toLocaleDateString(); }catch(e){return d} })(m.expiry||'') }</div>
     </div>
     <div style="width:100%;max-width:400px;display:flex;gap:12px;margin-top:28px;padding-bottom:30px">
       <button onclick="document.getElementById('umuagu-fullscreen').style.display='none'" style="flex:1;padding:16px;border-radius:16px;border:1.5px solid ${UMUAGU_BLUE};background:#9AA0C0;color:${UMUAGU_BLUE};font-weight:800">CLOSE</button>
@@ -626,13 +626,18 @@ window.openFullCard = function(m){
 
   document.getElementById('umuagu-fullscreen').style.display='block';
   
-  document.getElementById('shareBtn').onclick = async function(){
+document.getElementById('shareBtn').onclick = async function(){
     const btn = this;
     btn.innerText = '⏳ Creating...';
     btn.disabled = true;
+
+    // Build WhatsApp link BEFORE async - so browser won't block it
+    const waNum = String(m.phone||'').replace(/[^0-9]/g,'').replace(/^0/,'234');
+    const waText = `Hi ${m.name} 💪 Your UMUAGU GYM card is ready! ID: ${m.membershipId} - Show this at entrance.`;
+    const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`;
+
     try{
       const imgEl = document.getElementById('cardProfileImg');
-      // Force base64 for download - use canvas to convert
       if(imgEl && imgEl.src && !imgEl.src.startsWith('data:')){
         await new Promise((resolve)=>{
           if(imgEl.complete) resolve();
@@ -645,7 +650,7 @@ window.openFullCard = function(m){
           ctx.drawImage(imgEl, 0, 0, 300, 300);
           imgEl.src = c.toDataURL('image/jpeg', 0.9);
           await new Promise(r=>setTimeout(r,300));
-        }catch(e){ console.log('convert failed', e); }
+        }catch(e){}
       }
 
       const el = document.getElementById('umuaguCard');
@@ -657,24 +662,32 @@ window.openFullCard = function(m){
         logging: false
       });
       
-      canvas.toBlob(async(blob)=>{
-        const file = new File([blob], `UMUAGU-${m.membershipId||'card'}.png`, {type:'image/png'});
-        if(navigator.canShare && navigator.canShare({files:[file]})){
-          await navigator.share({files:[file], title:'UMUAGU Card'});
-        } else {
-          const url=URL.createObjectURL(blob);
-          const a=document.createElement('a'); a.href=url; a.download=file.name; a.click();
-          setTimeout(()=>URL.revokeObjectURL(url), 1000);
-          const waNum = String(m.phone||'').replace(/[^0-9]/g,'').replace(/^0/,'234');
-          if(waNum) window.open('https://wa.me/'+waNum,'_blank');
-        }
+      canvas.toBlob((blob)=>{
+        const fileName = `UMUAGU-${m.membershipId||'card'}.png`;
+        
+        // 1. DOWNLOAD FIRST
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url), 1000);
+
+        // 2. THEN GO TO WHATSAPP - use href not window.open
         btn.innerText = 'SEND TO WHATSAPP 📲';
         btn.disabled = false;
+        if(waNum) {
+          setTimeout(()=>{ window.location.href = waUrl; }, 600);
+        }
       }, 'image/png', 1.0);
+
     }catch(err){
+      // Even if screenshot fails, still go to WhatsApp
       btn.innerText = 'SEND TO WHATSAPP 📲';
       btn.disabled = false;
-      alert('Error: '+err.message);
+      if(waNum) window.location.href = waUrl;
     }
   };
 };
