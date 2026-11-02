@@ -633,6 +633,7 @@ document.getElementById('shareBtn').onclick = async function(){
 
     // Build WhatsApp link BEFORE async - so browser won't block it
     const waNum = String(m.phone||'').replace(/[^0-9]/g,'').replace(/^0/,'234');
+    const waText = `Hi ${m.name} 💪 Your UMUAGU GYM card is ready! ID: ${m.membershipId} - Show it at the entrance.`;
     const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`;
 
     try{
