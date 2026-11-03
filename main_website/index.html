@@ -87,14 +87,24 @@
 
 <div id="plans" class="page">
  <h2>CHOOSE YOUR <span class="neon">PLAN</span></h2><p class="muted-sm">Open 7AM-9PM daily</p>
-  <div class="card plan-card" onclick="selectPlan(this,'Daily Without Coaching')"><h3>Daily • Without Coaching</h3><div class="price">₦1,500 / day</div></div>
+ <!-- <div class="card plan-card" onclick="selectPlan(this,'Daily Without Coaching')"><h3>Daily • Without Coaching</h3><div class="price">₦1,500 / day</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'Daily With Coaching')"><span class="badge">BEGINNER FRIENDLY</span><h3>Daily • With Coaching</h3><div class="price">₦2,500 / day</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'Weekly Without Coaching')"><h3>Weekly • Without Coaching</h3><div class="price">₦7,000 / week</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'Weekly With Coaching')"><h3>Weekly • With Coaching</h3><div class="price">₦10,000 / week</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'2 Weeks Without Coaching')"><h3>2 Weeks • Without Coaching</h3><div class="price">₦12,000 / 2 weeks</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'2 Weeks With Coaching')"><span class="badge">MOST POPULAR</span><h3>2 Weeks • With Coaching</h3><div class="price">₦16,000 / 2 weeks</div></div>
   <div class="card plan-card" onclick="selectPlan(this,'Monthly Without Coaching')"><h3>Monthly • Without Coaching</h3><div class="price">₦12,000 / month</div></div>
-  <div class="card plan-card selected" onclick="selectPlan(this,'Monthly With Coaching')"><span class="badge">MOST POPULAR</span><h3>Monthly • With Coaching</h3><div class="price">₦20,000 / month</div></div>
+  <div class="card plan-card selected" onclick="selectPlan(this,'Monthly With Coaching')"><span class="badge">MOST POPULAR</span><h3>Monthly • With Coaching</h3><div class="price">₦20,000 / month</div></div> -->
+
+
+  <div class="card plan-card" onclick="selectPlan(this,'Daily Without Coaching')"><h3>Daily • Without Coaching</h3><div class="price">₦2,500 / day</div></div>
+  <div class="card plan-card" onclick="selectPlan(this,'Weekly Without Coaching')"><h3>Weekly • Without Coaching</h3><div class="price">₦7,000 / week</div></div>
+  <div class="card plan-card" onclick="selectPlan(this,'2 Weeks Without Coaching')"><h3>2 Weeks • Without Coaching</h3><div class="price">₦13,000 / 2 weeks</div></div>
+  <div class="card plan-card" onclick="selectPlan(this,'2 Weeks With Coaching')"><span class="badge">BEGINNER FRIENDLY</span><h3>2 Weeks • With Coaching</h3><div class="price">₦30,000 / 2 weeks</div></div>
+  <div class="card plan-card" onclick="selectPlan(this,'Monthly Without Coaching')"><h3>Monthly • Without Coaching</h3><div class="price">₦20,000 / month</div></div>
+  <div class="card plan-card" onclick="selectPlan(this,'Monthly With Coaching')"><span class="badge">MOST POPULAR</span><h3>Monthly • With Coaching</h3><div class="price">₦50,000 / month</div></div>
+ <div class="card plan-card" onclick="selectPlan(this,'3 Months Without Coaching')"><h3>3 Months • Without Coaching</h3><div class="price">₦55,000 / 3 Months</div></div>
+  <div class="card plan-card selected" onclick="selectPlan(this,'6 Months Without Coaching')"><h3>6 Months • Without Coaching</h3><div class="price">₦100,000 / 6 Months</div></div>
 </div>
 
 <div id="register" class="page">
@@ -125,9 +135,9 @@
     
     <div id="profileName" style="color:#a6ff00;font-size:12px;margin-top:-10px;margin-bottom:14px"></div>
     <label>PREFERRED SESSION *</label>
-    <select id="session" required><option value="">When will you train?</option><option>Morning 7AM-11AM</option><option>Evening 3PM-8PM</option><option>Both Sessions</option></select>
+    <select id="session" required><option value="">When will you train?</option><option>Morning 7AM-11AM</option><option>Evening 3PM-8PM</option><option>Anytime</option></select>
     <label>PLAN *</label>
-   <select id="planSelect" required><option value="">Select plan</option><option value="Daily Without Coaching">Daily Without Coaching - ₦1,500</option><option value="Daily With Coaching">Daily With Coaching - ₦2,500</option><option value="Weekly Without Coaching">Weekly Without Coaching - ₦7,000</option><option value="Weekly With Coaching">Weekly With Coaching - ₦10,000</option><option value="2 Weeks Without Coaching">2 Weeks Without Coaching - ₦12,000</option><option value="2 Weeks With Coaching">2 Weeks With Coaching - ₦16,000</option><option value="Monthly Without Coaching">Monthly Without Coaching - ₦12,000</option><option value="Monthly With Coaching">Monthly With Coaching - ₦20,000</option></select>
+   <select id="planSelect" required><option value="">Select plan</option><option value="Daily Without Coaching">Daily Without Coaching - ₦2,500</option><option value="Weekly Without Coaching">Weekly Without Coaching - ₦7,000</option><option value="2 Weeks Without Coaching">2 Weeks Without Coaching - ₦13,000</option><option value="2 Weeks With Coaching">2 Weeks With Coaching - ₦30,000</option><option value="Monthly Without Coaching">Monthly Without Coaching - ₦20,000</option><option value="Monthly With Coaching">Monthly With Coaching - ₦50,000</option><option value="3 Months Without Coaching">3 Months Without Coaching - ₦55,000</option><option value="6 Months Without Coaching">6 Months Without Coaching - ₦100,000</option></select>
     <label>GOAL *</label><textarea id="goal" placeholder="Build strength..." required></textarea>
 
     <label>PAYMENT METHOD *</label>

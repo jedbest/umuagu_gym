@@ -51,14 +51,14 @@ function selectPlan(card,val){
 function updateAmount(){
   const v=document.getElementById('planSelect').value;
   const m={
-    'Daily Without Coaching':'₦1,500',
-    'Daily With Coaching':'₦2,500',
+   'Daily Without Coaching':'₦2,500',
     'Weekly Without Coaching':'₦7,000',
-    'Weekly With Coaching':'₦10,000',
-    '2 Weeks Without Coaching':'₦12,000',
-    '2 Weeks With Coaching':'₦16,000',
-    'Monthly Without Coaching':'₦12,000',
-    'Monthly With Coaching':'₦20,000'
+    '2 Weeks Without Coaching':'₦13,000',
+    '2 Weeks With Coaching':'₦30,000',
+    'Monthly Without Coaching':'₦20,000',
+    'Monthly With Coaching':'₦50,000',
+    '3 Months Without Coaching':'₦55,000',
+    '6 Months Without Coaching':'₦100,000'
   };
   const el=document.getElementById('showAmount');if(el)el.textContent=m[v]||'Select plan';
 }
@@ -68,9 +68,10 @@ function getDaysFromPlan(plan){
   if(p.includes("daily")) return 1;
   if(p.includes("weekly") &&!p.includes("2")) return 7;
   if(p.includes("2 week") || p.includes("2weeks") || p.includes("two week")) return 14;
-  if(p.includes("monthly") || p.includes("month")) return 30;
-  if(p.includes("quarterly")) return 90;
-  if(p.includes("yearly")) return 365;
+  if(p.includes("monthly") || p.includes("month") &&!p.includes("3") &&!p.includes("6")) return 30;
+  if(p.includes("monthly") || p.includes("month") &&!p.includes("3") &&!p.includes("6")) return 30;
+  if(p.includes("3 month") || p.includes("3months") || p.includes("three month")) return 90;
+  if(p.includes("6 month") || p.includes("6months") || p.includes("six month")) return 180;
   return 30;
 }
 
@@ -244,7 +245,8 @@ async function validateForm(e){
     err.textContent='⚠️ Fill all fields oo - including Branch';err.style.display='block';return false;
   }
   if(!profileFile &&!localStorage.getItem('tempProfilePic')){
-    err.textContent='⚠️ Please upload your face photo for ID card';err.style.display='block';return false;
+    err.textContent='⚠️ Please upload your face photo for ID card';err.style.display='block';
+    return false;
   }
   if(isNow &&!receiptFile){
     err.textContent='⚠️ You chose Pay Immediately - please upload receipt';err.style.display='block';return false;
@@ -297,15 +299,15 @@ async function validateForm(e){
 
     // === 2. CONTINUE REGISTRATION ===
     submitBtn.innerText = isTopUp? "Extending plan..." : "Processing...";
-    let price = 1500;
-    if(plan === 'Daily Without Coaching') price = 1500;
-    if(plan === 'Daily With Coaching') price = 2500;
+    let price = 2500;
+    if(plan === 'Daily Without Coaching') price = 2500;
     if(plan === 'Weekly Without Coaching') price = 7000;
-    if(plan === 'Weekly With Coaching') price = 10000;
-    if(plan === '2 Weeks Without Coaching') price = 12000;
-    if(plan === '2 Weeks With Coaching') price = 16000;
-    if(plan === 'Monthly Without Coaching') price = 12000;
-    if(plan === 'Monthly With Coaching') price = 20000;
+    if(plan === '2 Weeks Without Coaching') price = 13000;
+    if(plan === '2 Weeks With Coaching') price = 30000;
+    if(plan === 'Monthly Without Coaching') price = 20000;
+    if(plan === 'Monthly With Coaching') price = 50000;
+    if(plan === '3 Months Without Coaching') price = 55000;
+    if(plan === '6 Months Without Coaching') price = 100000;
     if(!isNow){ price = 0; }
 
     let receiptObj = null;
