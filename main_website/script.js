@@ -1,4 +1,63 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAFf3X3DanenKP1qvQDOwdYXFUrxlCmxbkSc22ZBRP2RpfhldzbwnbsSMhVtWip7Od5g/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyX68zoviOnfHOGZLUQeYgUawDoLQaD4iliWbn57qb2a3DgMOzKQfWw8NvC-uJTJ0J3/exec";
+const PRICES = {
+  Nsukka: {
+    'Daily Without Coaching': 2500,
+    'Weekly Without Coaching': 7000,
+    '2 Weeks Without Coaching': 13000,
+    '2 Weeks With Coaching': 30000,
+    'Monthly Without Coaching': 20000,
+    'Monthly With Coaching': 50000,
+    '3 Months Without Coaching': 55000,
+    '6 Months Without Coaching': 100000
+  },
+  Enugu: {
+    'Daily Without Coaching': 2000,
+    'Weekly Without Coaching': 5500,
+    '2 Weeks Without Coaching': 10000,
+    'Monthly Without Coaching': 17000,
+    '3 Months Without Coaching': 36000,
+    '6 Months Without Coaching': 70000
+  }
+};
+let selectedPlan = ""; // <-- THE TRUTH - what user actually clicked
+
+function getBranch(){ return document.getElementById('branch')?.value || document.getElementById('addBranch')?.value || 'Nsukka'; }
+function getPriceForPlan(plan, branch){ 
+  branch = branch || getBranch(); 
+  return (PRICES[branch] && PRICES[branch][plan]) || 0; 
+}
+function getDynamicPriceForBranch(days, isWith, branch){
+  // For custom days in registration - use Nsukka/Enugu dynamic breakdown
+  var P = PRICES[branch||'Nsukka'];
+  // Build dynamic from base prices
+  var d = P['Daily Without Coaching'] || 2500;
+  var w = P['Weekly Without Coaching'] || 7000;
+  var w2 = P['2 Weeks Without Coaching'] || 13000;
+  // For With, fallback to Without if Enugu has no With
+  var w2With = P['2 Weeks With Coaching'] || w2;
+  var mo = P['Monthly Without Coaching'] || 20000;
+  var moWith = P['Monthly With Coaching'] || mo;
+  var t = P['3 Months Without Coaching'] || 55000;
+  var s = P['6 Months Without Coaching'] || 100000;
+  var dd = isWith ? d : d; // Enugu has no With, so use Without
+  var ww = isWith ? w : w;
+  var ww2 = isWith ? w2With : w2;
+  var mmo = isWith ? moWith : mo;
+  if(days===1) return dd;
+  if(days===7) return ww;
+  if(days===14) return ww2;
+  if(days===30) return mmo;
+  if(days===90) return t;
+  if(days===180) return s;
+  var price=0, rem=days;
+  if(rem>=180){price+=Math.floor(rem/180)*s;rem%=180;}
+  if(rem>=90){price+=Math.floor(rem/90)*t;rem%=90;}
+  if(rem>=30){price+=Math.floor(rem/30)*mmo;rem%=30;}
+  if(rem>=14){price+=Math.floor(rem/14)*ww2;rem%=14;}
+  if(rem>=7){price+=Math.floor(rem/7)*ww;rem%=7;}
+  price+=rem*dd;
+  return price;
+}
 const cleanPhone = (p) => String(p).replace(/[^0-9]/g,'').slice(-10);
 
 function updateOpenStatus(){
@@ -40,27 +99,49 @@ function showPage(pageId, el){
   window.scrollTo(0,0);
 }
 
-function selectPlan(card,val){
+function selectPlan(card,val,branch){
   document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');
-  document.getElementById('planSelect').value=val;
+  if(card) card.classList.add('selected');
+  selectedPlan = val; // save it, never let updatePlanOptions erase it
+  if(branch){
+    document.getElementById('branch').value = branch;
+    updatePlanOptions();
+  }
+  const ps = document.getElementById('planSelect');
+  if(ps) ps.value = val;
   updateAmount();
   showPage('register');
+  // Double-check after page shows - because showPage can reset selects
+  setTimeout(()=>{
+    const ps2 = document.getElementById('planSelect');
+    if(ps2) ps2.value = selectedPlan;
+    updateAmount();
+  }, 50);
 }
 
 function updateAmount(){
   const v=document.getElementById('planSelect').value;
-  const m={
-   'Daily Without Coaching':'₦2,500',
-    'Weekly Without Coaching':'₦7,000',
-    '2 Weeks Without Coaching':'₦13,000',
-    '2 Weeks With Coaching':'₦30,000',
-    'Monthly Without Coaching':'₦20,000',
-    'Monthly With Coaching':'₦50,000',
-    '3 Months Without Coaching':'₦55,000',
-    '6 Months Without Coaching':'₦100,000'
-  };
-  const el=document.getElementById('showAmount');if(el)el.textContent=m[v]||'Select plan';
+  const branch = getBranch();
+  const price = getPriceForPlan(v, branch);
+  const el=document.getElementById('showAmount');
+  if(el) el.textContent = price ? '₦'+price.toLocaleString() : 'Select plan';
+}
+function updatePlanOptions(){
+  const branch = getBranch();
+  const planSelect = document.getElementById('planSelect');
+  if(!planSelect) return;
+  // Use selectedPlan if it belongs to this branch, otherwise keep current dropdown
+  const want = selectedPlan && PRICES[branch] && PRICES[branch][selectedPlan] ? selectedPlan : planSelect.value;
+  planSelect.innerHTML = '<option value="">Select plan</option>';
+  const list = PRICES[branch] || PRICES.Nsukka;
+  for(let plan in list){
+    const opt = document.createElement('option');
+    opt.value = plan;
+    opt.textContent = plan + ' - ₦' + list[plan].toLocaleString();
+    planSelect.appendChild(opt);
+  }
+  if(list[want]){ planSelect.value = want; selectedPlan = want; }
+  updateAmount();
 }
 
 function getDaysFromPlan(plan){
@@ -224,7 +305,8 @@ async function validateForm(e){
   const name=document.getElementById('fullName').value.trim();
   const phone=document.getElementById('phone').value.trim();
   const sess=document.getElementById('session').value;
-  const plan=document.getElementById('planSelect').value;
+ const plan = selectedPlan || document.getElementById('planSelect').value;
+console.log('SUBMIT PLAN DEBUG: selectedPlan=', selectedPlan, 'dropdown=', document.getElementById('planSelect').value, 'final=', plan);
   const goal=document.getElementById('goal').value.trim();
   const email = document.getElementById('email')?.value.trim() || "";
   const profileInput = document.getElementById('profilePic');
@@ -241,16 +323,27 @@ async function validateForm(e){
   const err=document.getElementById('errorMsg');
   const submitBtn = e.target.querySelector('button[type="submit"]');
 
-  if(!name||!phone||!sess||!plan||!goal||!selectedBranch){
-    err.textContent='⚠️ Fill all fields oo - including Branch';err.style.display='block';return false;
-  }
-  if(!profileFile &&!localStorage.getItem('tempProfilePic')){
-    err.textContent='⚠️ Please upload your face photo for ID card';err.style.display='block';
+    // === VALIDATION - show exactly what is missing ===
+  let missing = [];
+  if(!name) missing.push('Full Name');
+  if(!phone) missing.push('Phone');
+  if(!email) missing.push('Email');
+  if(!selectedBranch) missing.push('Branch');
+  if(!sess) missing.push('Preferred Session');
+  if(!plan) missing.push('Plan');
+  if(!goal) missing.push('Goal');
+  const hasPhoto = !!profileFile || (!!localStorage.getItem('tempProfilePic') && document.getElementById('profilePreview')?.style.display === 'block' || document.getElementById('profileName')?.textContent.includes('✅'));
+if(!hasPhoto) missing.push('Profile Photo');
+  if(isNow && !receiptFile) missing.push('Receipt');
+
+  if(missing.length > 0){
+    err.textContent = '⚠️ Please fill: ' + missing.join(', ');
+    err.style.display='block';
+    err.scrollIntoView({behavior:'smooth', block:'center'});
     return false;
   }
-  if(isNow &&!receiptFile){
-    err.textContent='⚠️ You chose Pay Immediately - please upload receipt';err.style.display='block';return false;
-  }
+
+  
   err.style.display='none';
   submitBtn.innerText = "Checking...";
   submitBtn.disabled = true;
@@ -299,16 +392,7 @@ async function validateForm(e){
 
     // === 2. CONTINUE REGISTRATION ===
     submitBtn.innerText = isTopUp? "Extending plan..." : "Processing...";
-    let price = 2500;
-    if(plan === 'Daily Without Coaching') price = 2500;
-    if(plan === 'Weekly Without Coaching') price = 7000;
-    if(plan === '2 Weeks Without Coaching') price = 13000;
-    if(plan === '2 Weeks With Coaching') price = 30000;
-    if(plan === 'Monthly Without Coaching') price = 20000;
-    if(plan === 'Monthly With Coaching') price = 50000;
-    if(plan === '3 Months Without Coaching') price = 55000;
-    if(plan === '6 Months Without Coaching') price = 100000;
-    if(!isNow){ price = 0; }
+   let price = getPriceForPlan(plan, selectedBranch);
 
     let receiptObj = null;
     if(isNow && receiptFile){
@@ -379,3 +463,22 @@ function getBase64(file){
     reader.onerror = e=> reject(e);
   });
 }
+
+let currentPlanBranch = 'Nsukka';
+function switchPlanBranch(branch){
+  currentPlanBranch = branch;
+  document.getElementById('btnBranchNsukka').style.background = branch==='Nsukka' ? '#fff' : '#111';
+  document.getElementById('btnBranchNsukka').style.color = branch==='Nsukka' ? '#000080' : '#fff';
+  document.getElementById('btnBranchEnugu').style.background = branch==='Enugu' ? '#fff' : '#111';
+  document.getElementById('btnBranchEnugu').style.color = branch==='Enugu' ? '#000080' : '#fff';
+  const list = PRICES[branch];
+  let html = '';
+  for(let plan in list){
+    const isPopular = plan.includes('Monthly With') ? '<span class="badge">MOST POPULAR</span>' : (plan.includes('2 Weeks With') ? '<span class="badge">BEGINNER FRIENDLY</span>' : '');
+    const daysLabel = plan.replace(' Without Coaching','').replace(' With Coaching','');
+    html += `<div class="card plan-card" onclick="selectPlan(this,'${plan}','${branch}')">${isPopular}<h3>${plan}</h3><div class="price">₦${list[plan].toLocaleString()} / ${daysLabel}</div></div>`;
+  }
+  document.getElementById('planList').innerHTML = html;
+}
+// Call on load
+document.addEventListener('DOMContentLoaded', ()=>{ switchPlanBranch('Nsukka'); });
