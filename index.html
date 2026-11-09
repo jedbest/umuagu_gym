@@ -825,29 +825,70 @@ function showSchedule(phone, name){
 function closeSchedule(){
   document.getElementById('scheduleModal').style.display = 'none';
 }
-function downloadSchedule(){
-  const a = document.createElement('a');
-  a.href = SCHEDULE_IMG;
-  a.download = "UmuAgu-Weekly-Plan.jpg";
-  a.target = "_blank";
-  a.click();
+async function getScheduleFile(){
+  // Get the image as a real file - fast, no html2canvas
+  const res = await fetch(SCHEDULE_IMG);
+  const blob = await res.blob();
+  return new File([blob], "UmuAgu-Weekly-Plan.jpg", {type: "image/jpeg"});
 }
-function sendScheduleWhatsApp(){
-  downloadSchedule(); // download first so you can attach it
-  const clean = String(currentSchedulePhone).replace(/[^0-9]/g,'').replace(/^0/,'234');
-  const text = `Hi ${currentScheduleName} 💪\n\nHere is your *UmuAgu Weekly Plan* 👇\nMorning: 7:30am | Evening: 5:00pm\nBe 5 minutes early. Bring water and a towel!\n\n- UmuAgu Gym`;
-  setTimeout(()=>{ window.location.href = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`; }, 600);
+
+async function downloadSchedule(){
+  try{
+    const file = await getScheduleFile();
+    // Try Share first - this is what puts it in Gallery / Photos
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({
+        files: [file],
+        title: "UmuAgu Weekly Plan",
+        text: "UmuAgu Weekly Plan"
+      });
+      return;
+    }
+    // Fallback if Share not supported - normal download
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url; a.download = "UmuAgu-Weekly-Plan.jpg"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    alert("Downloaded. If you don't see it in Gallery, go to Files > Downloads > move it to Pictures, or use Send to WhatsApp button instead.");
+  }catch(e){
+    // User cancelled share - do nothing
+    console.log("Share cancelled");
+  }
+}
+
+async function sendScheduleWhatsApp(){
+  try{
+    const file = await getScheduleFile();
+    const text = `Hi ${currentScheduleName} 💪\n\nHere is your UmuAgu Weekly Plan 👇\nMorning: 7:30am | Evening: 5:00pm\nBe 5 minutes early. Bring water and a towel!\n\n- UmuAgu Gym`;
+
+    // BEST WAY: Share image + text straight to WhatsApp - no gallery needed
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({
+        files: [file],
+        title: "UmuAgu Weekly Plan",
+        text: text
+      });
+      return;
+    }
+
+    // Fallback: old way - download + open WhatsApp chat
+    downloadSchedule();
+    const clean = String(currentSchedulePhone).replace(/[^0-9]/g,'').replace(/^0/,'234');
+    setTimeout(()=>{ window.location.href = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`; }, 600);
+  }catch(e){
+    console.log("Share cancelled");
+  }
 }
 </script>
 <div id="scheduleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999;overflow:auto;padding:15px">
   <div style="max-width:520px;margin:20px auto;background:#fff;border-radius:16px;padding:12px">
     <img id="scheduleImg" src="" style="width:100%;border-radius:12px;display:block">
     <p id="scheduleForName" style="text-align:center;color:#666;font-size:12px;margin:8px 0 0 0"></p>
-    <div style="display:flex;gap:10px;margin-top:12px">
-      <button onclick="downloadSchedule()" style="flex:1;padding:14px;border-radius:12px;background:#0A0A8A;color:#fff;font-weight:800;border:none;cursor:pointer">⬇️ Download</button>
+    <div style="display:flex; gap:10px;margin-top:12px">
       <button onclick="sendScheduleWhatsApp()" style="flex:1;padding:14px;border-radius:12px;background:#25D366;color:#fff;font-weight:800;border:none;cursor:pointer">📲 Send to WhatsApp</button>
+    <button onclick="closeSchedule()" style="flex:1;padding:14px;border-radius:12px;background:#fff;color:#0A0A8A;font-weight:800;border:1.5px solid #0A0A8A;cursor:pointer">✕ Cancel</button>
     </div>
-    <button onclick="closeSchedule()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;background:#fff;color:#0A0A8A;font-weight:800;border:1.5px solid #0A0A8A;cursor:pointer">✕ Cancel - Back to Admin</button>
+    
   </div>
 </div>
 </body>
