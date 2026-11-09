@@ -289,7 +289,24 @@ if(passInput){
 
 // --- REST OF YOUR FUNCTIONS (unchanged) ---
 function filterTable(){const q=document.getElementById('search').value.toLowerCase().trim();const info=document.getElementById('searchInfo');let visibleCount=0;document.querySelectorAll('table tbody tr').forEach(tr=>{if(tr.innerText.includes('No one')||tr.innerText.includes('No active')||tr.innerText.includes('No expired')||tr.innerText.includes('Loading')){return}const show=q===''||tr.innerText.toLowerCase().includes(q);tr.style.display=show?'':'none';if(show)visibleCount++;});if(q){info.textContent=visibleCount>0?`✅ ${visibleCount} found`:`❌ No results`}else{info.textContent=''}}
-function getExpiryFromPlan(plan, from=new Date()){const d=new Date(from);const p=plan.toLowerCase();if(p.includes("daily"))d.setDate(d.getDate()+1);else if(p.includes("weekly")&&!p.includes("2"))d.setDate(d.getDate()+7);else if(p.includes("2 week"))d.setDate(d.getDate()+14);else if(p.includes("3 months"))d.setMonth(d.getMonth()+3);else if(p.includes("6 months"))d.setMonth(d.getMonth()+6);else d.setMonth(d.getMonth()+1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0');}
+function getExpiryFromPlan(plan, from=new Date()){
+  const d = new Date(from);
+  const p = String(plan||"").toLowerCase();
+  let days = 30;
+  if(p.includes("daily")) days = 1;
+  else if(p.includes("2 week")) days = 14;
+  else if(p.includes("weekly")) days = 7;
+  else if(p.includes("3 months")) days = 90;
+  else if(p.includes("6 months")) days = 180;
+  else if(p.includes("monthly")) days = 30;
+  else {
+    const m = p.match(/(\d+)\s*day/);
+    if(m) days = parseInt(m[1],10);
+  }
+  // TODAY counts as Day 1, so + (days - 1)
+  d.setDate(d.getDate() + (days - 1));
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0');
+}
 function parseDate(str){if(!str)return null;const s=String(str).trim();if(s.includes('T')||s.match(/^\d{4}-\d{2}-\d{2}/)){const d=new Date(s);if(!isNaN(d)){d.setHours(0,0,0,0);return d}}if(s.includes('/')){const p=s.split('/');if(p.length===3){const d=new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));if(!isNaN(d)){d.setHours(0,0,0,0);return d}}}const d=new Date(s);if(!isNaN(d)){d.setHours(0,0,0,0);return d}return null}
 let rawDataCache=[];
 function getDynamicPriceAdmin(days, isWith, branch){
@@ -297,7 +314,7 @@ function getDynamicPriceAdmin(days, isWith, branch){
   branch = branch || 'Nsukka';
   var PRICES_ADMIN = {
     Nsukka: {daily_without:2500,weekly_without:7000,twoWeeks_without:13000,twoWeeks_with:43000,monthly_without:20000,monthly_with:70000,threeMonths_without:55000,sixMonths_without:100000},
-    Enugu: {daily_without:2000,weekly_without:5000,twoWeeks_without:10000,twoWeeks_with:40000,monthly_without:17000,monthly_with:67000,threeMonths_without:36000,sixMonths_without:70000}
+    Enugu: {daily_without:2000,weekly_without:5500,twoWeeks_without:10000,twoWeeks_with:40000,monthly_without:17000,monthly_with:67000,threeMonths_without:36000,sixMonths_without:70000}
   };
   var P = PRICES_ADMIN[branch] || PRICES_ADMIN.Nsukka;
   var d=P.daily_without;
@@ -320,7 +337,7 @@ function getPriceFromPlan(plan, branch){
   branch = branch || 'Nsukka';
   var PRICES_ADMIN = {
     Nsukka: {'daily without coaching':2500,'weekly without coaching':7000,'2 weeks without coaching':13000,'2 weeks with coaching':43000,'monthly without coaching':20000,'monthly with coaching':70000,'3 months without coaching':55000,'6 months without coaching':100000},
-    Enugu: {'daily without coaching':2000,'weekly without coaching':5000,'2 weeks without coaching':10000,'2 weeks with coaching':40000,'monthly without coaching':17000,'monthly with coaching':67000,'3 months without coaching':36000,'6 months without coaching':70000}
+    Enugu: {'daily without coaching':2000,'weekly without coaching':5500,'2 weeks without coaching':10000,'2 weeks with coaching':40000,'monthly without coaching':17000,'monthly with coaching':67000,'3 months without coaching':36000,'6 months without coaching':70000}
   };
   var map = PRICES_ADMIN[branch] || PRICES_ADMIN.Nsukka;
   if(map[p]) return map[p];
@@ -609,7 +626,17 @@ window.allMembers = filteredData; // <-- ADD THIS so card finds real member
 }else diff = m.days || getDaysFromPlan(m.plan) || 7;
         expiryDisplay=`<span style="color:#666">—</span> <small style="color:#9AA0C0">⏸️ ${diff}d pending</small>`;
       } else if(expiry){
-        expiry.setHours(0,0,0,0);diff=Math.ceil((expiry-today)/(1000*60*60*24));
+        // Expiry is 8PM of expiry date
+let expiry8pm = new Date(expiry);
+expiry8pm.setHours(20,0,0,0);
+let now = new Date();
+if(now > expiry8pm){
+  diff = -1; // expired
+} else {
+  // Still active, even if it's the expiry date and before 8PM
+  expiry.setHours(0,0,0,0); today.setHours(0,0,0,0);
+  diff = Math.ceil((expiry - today)/(1000*60*60*24));
+}
         expiryDisplay=expiry.toDateString().slice(4)+` <small style="color:#666">(${diff}d)</small>`;
       } else { expiryDisplay=`<span style="color:#666">—</span>`; }
       const inputId=`days_${idx}`;
@@ -805,7 +832,7 @@ function updateAdminPlanOptions(){
   const sel = document.getElementById('addPlan');
   const maps = {
     Nsukka: [['Daily Without Coaching',2500],['Weekly Without Coaching',7000],['2 Weeks Without Coaching',13000],['2 Weeks With Coaching',43000],['Monthly Without Coaching',20000],['Monthly With Coaching',70000],['3 Months Without Coaching',55000],['6 Months Without Coaching',100000]],
-    Enugu: [['Daily Without Coaching',2000],['Weekly Without Coaching',5000],['2 Weeks Without Coaching',10000],['2 Weeks With Coaching',40000],['Monthly Without Coaching',17000],['Monthly With Coaching',67000],['3 Months Without Coaching',36000],['6 Months Without Coaching',70000]]
+    Enugu: [['Daily Without Coaching',2000],['Weekly Without Coaching',5500],['2 Weeks Without Coaching',10000],['2 Weeks With Coaching',40000],['Monthly Without Coaching',17000],['Monthly With Coaching',67000],['3 Months Without Coaching',36000],['6 Months Without Coaching',70000]]
   };
   const list = maps[branch] || maps.Nsukka;
   sel.innerHTML = '<option value="">Select Plan</option>';
@@ -832,52 +859,25 @@ async function getScheduleFile(){
   return new File([blob], "UmuAgu-Weekly-Plan.jpg", {type: "image/jpeg"});
 }
 
-async function downloadSchedule(){
-  try{
-    const file = await getScheduleFile();
-    // Try Share first - this is what puts it in Gallery / Photos
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({
-        files: [file],
-        title: "UmuAgu Weekly Plan",
-        text: "UmuAgu Weekly Plan"
-      });
-      return;
-    }
-    // Fallback if Share not supported - normal download
-    const url = URL.createObjectURL(file);
-    const a = document.createElement('a');
-    a.href = url; a.download = "UmuAgu-Weekly-Plan.jpg"; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url), 1000);
-    alert("Downloaded. If you don't see it in Gallery, go to Files > Downloads > move it to Pictures, or use Send to WhatsApp button instead.");
-  }catch(e){
-    // User cancelled share - do nothing
-    console.log("Share cancelled");
-  }
+function downloadSchedule(){
+  // Normal download - goes to Downloads folder
+  const a = document.createElement('a');
+  a.href = SCHEDULE_IMG; // "schedule.jpg"
+  a.download = "UmuAgu-Weekly-Plan.png";
+  a.click();
 }
 
-async function sendScheduleWhatsApp(){
-  try{
-    const file = await getScheduleFile();
-    const text = `Hi ${currentScheduleName} 💪\n\nHere is your UmuAgu Weekly Plan 👇\nMorning: 7:30am | Evening: 5:00pm\nBe 5 minutes early. Bring water and a towel!\n\n- UmuAgu Gym`;
+function sendScheduleWhatsApp(){
+  // 1. Download first
+  downloadSchedule();
 
-    // BEST WAY: Share image + text straight to WhatsApp - no gallery needed
-   // if(navigator.canShare && navigator.canShare({files:[file]})){
-     // await navigator.share({
-       // files: [file],
-        //title: "UmuAgu Weekly Plan",
-       // text: text
-      //});
-      //return;
-    //}
+  // 2. Go straight to THIS person's DM - not share sheet
+  const clean = String(currentSchedulePhone).replace(/[^0-9]/g,'').replace(/^0/,'234');
+  const text = `Hi ${currentScheduleName} 💪\n\nHere is your *UmuAgu Weekly Plan* 👇\nMorning: 7:30am | Evening: 5:00pm\nBe 5 minutes early. Bring water and a towel!\n\n- UmuAgu Gym`;
 
-    // Fallback: old way - download + open WhatsApp chat
-    downloadSchedule();
-    const clean = String(currentSchedulePhone).replace(/[^0-9]/g,'').replace(/^0/,'234');
-    setTimeout(()=>{ window.location.href = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`; }, 600);
-  }catch(e){
-    console.log("Share cancelled");
-  }
+  setTimeout(()=>{
+    window.location.href = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
+  }, 800);
 }
 </script>
 <div id="scheduleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999;overflow:auto;padding:15px">
