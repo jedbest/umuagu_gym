@@ -4,17 +4,19 @@ const PRICES = {
     'Daily Without Coaching': 2500,
     'Weekly Without Coaching': 7000,
     '2 Weeks Without Coaching': 13000,
-    '2 Weeks With Coaching': 30000,
+    '2 Weeks With Coaching': 43000,
     'Monthly Without Coaching': 20000,
-    'Monthly With Coaching': 50000,
+    'Monthly With Coaching': 70000,
     '3 Months Without Coaching': 55000,
     '6 Months Without Coaching': 100000
   },
   Enugu: {
     'Daily Without Coaching': 2000,
-    'Weekly Without Coaching': 5500,
+    'Weekly Without Coaching': 5000,
     '2 Weeks Without Coaching': 10000,
+    '2 Weeks With Coaching': 40000,
     'Monthly Without Coaching': 17000,
+    'Monthly With Coaching': 67000,
     '3 Months Without Coaching': 36000,
     '6 Months Without Coaching': 70000
   }
@@ -474,7 +476,7 @@ function switchPlanBranch(branch){
   const list = PRICES[branch];
   let html = '';
   for(let plan in list){
-    const isPopular = plan.includes('Monthly With') ? '<span class="badge">MOST POPULAR</span>' : (plan.includes('2 Weeks With') ? '<span class="badge">BEGINNER FRIENDLY</span>' : '');
+    const isPopular = plan.includes('Monthly With ') ? '<span class="badge">MOST POPULAR</span>' : (plan.includes('2 Weeks With ') ? '<span class="badge">BEGINNER FRIENDLY</span>' : '');
     const daysLabel = plan.replace(' Without Coaching','').replace(' With Coaching','');
     html += `<div class="card plan-card" onclick="selectPlan(this,'${plan}','${branch}')">${isPopular}<h3>${plan}</h3><div class="price">₦${list[plan].toLocaleString()} / ${daysLabel}</div></div>`;
   }

@@ -194,6 +194,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyX68zoviOnfHOGZLUQeYgUawDoLQaD4iliWbn57qb2a3DgMOzKQfWw8NvC-uJTJ0J3/exec";
 
+const SCHEDULE_IMG = "schedule.png"; // 2024-06-05 - Updated schedule image
 const LOGINS = {
   "NSUKKA2024": { branch: "Nsukka", role: "admin", name: "Nsukka Admin" },
   "ENUGU2024": { branch: "Enugu", role: "admin", name: "Enugu Admin" },
@@ -295,8 +296,8 @@ function getDynamicPriceAdmin(days, isWith, branch){
   days=Number(days)||0;
   branch = branch || 'Nsukka';
   var PRICES_ADMIN = {
-    Nsukka: {daily_without:2500,weekly_without:7000,twoWeeks_without:13000,twoWeeks_with:30000,monthly_without:20000,monthly_with:50000,threeMonths_without:55000,sixMonths_without:100000},
-    Enugu: {daily_without:2000,weekly_without:5500,twoWeeks_without:10000,monthly_without:17000,threeMonths_without:36000,sixMonths_without:70000}
+    Nsukka: {daily_without:2500,weekly_without:7000,twoWeeks_without:13000,twoWeeks_with:43000,monthly_without:20000,monthly_with:70000,threeMonths_without:55000,sixMonths_without:100000},
+    Enugu: {daily_without:2000,weekly_without:5000,twoWeeks_without:10000,twoWeeks_with:40000,monthly_without:17000,monthly_with:67000,threeMonths_without:36000,sixMonths_without:70000}
   };
   var P = PRICES_ADMIN[branch] || PRICES_ADMIN.Nsukka;
   var d=P.daily_without;
@@ -318,8 +319,8 @@ function getPriceFromPlan(plan, branch){
   var p=String(plan||"").toLowerCase().trim();
   branch = branch || 'Nsukka';
   var PRICES_ADMIN = {
-    Nsukka: {'daily without coaching':2500,'weekly without coaching':7000,'2 weeks without coaching':13000,'2 weeks with coaching':30000,'monthly without coaching':20000,'monthly with coaching':50000,'3 months without coaching':55000,'6 months without coaching':100000},
-    Enugu: {'daily without coaching':2000,'weekly without coaching':5500,'2 weeks without coaching':10000,'monthly without coaching':17000,'3 months without coaching':36000,'6 months without coaching':70000}
+    Nsukka: {'daily without coaching':2500,'weekly without coaching':7000,'2 weeks without coaching':13000,'2 weeks with coaching':43000,'monthly without coaching':20000,'monthly with coaching':70000,'3 months without coaching':55000,'6 months without coaching':100000},
+    Enugu: {'daily without coaching':2000,'weekly without coaching':5000,'2 weeks without coaching':10000,'2 weeks with coaching':40000,'monthly without coaching':17000,'monthly with coaching':67000,'3 months without coaching':36000,'6 months without coaching':70000}
   };
   var map = PRICES_ADMIN[branch] || PRICES_ADMIN.Nsukka;
   if(map[p]) return map[p];
@@ -637,7 +638,7 @@ if(isPaused){
 } else { 
   pausePlayBtn=`<button class="icon-btn" onclick="pauseMember('${m.phone}', '${m.membershipId || ''}', this)">⏸️</button>`; 
 }
-      const actionCell=`<div style="display:flex;flex-direction:column;gap:6px">${daysControl}<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${receiptBtn}<span style="color:#9AA0C0;font-weight:800;font-size:11px">${!isPaid?'':'Paid ₦'+amt.toLocaleString()}</span>${!isPaid?markPaidBtn:''}</div><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${cardBtn}${pausePlayBtn}${cancelBtn}</div></div>`;
+      const actionCell=`<div style="display:flex;flex-direction:column;gap:6px">${daysControl}<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${receiptBtn}<span style="color:#9AA0C0;font-weight:800;font-size:11px">${!isPaid?'':'Paid ₦'+amt.toLocaleString()}</span>${!isPaid?markPaidBtn:''}</div><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${cardBtn}<button onclick="showSchedule('${m.phone}','${m.name}')" style="background:#000080;color:#fff;padding:8px 12px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:pointer">📅 Schedule</button>${pausePlayBtn}${cancelBtn}</div></div>`;
       if(diff!==null && diff<0 && !isPaused){ expired++;expiredHTML+=`<tr><td>${m.name}<br><small style="color:#666">${m.phone}</small></td><td>${m.phone}</td><td>${displayPlan}</td><td><span style="background:#222;padding:2px 6px;border-radius:5px;font-size:11px;color:${String(m.branch||'').toLowerCase().includes('enugu')?'#ffaa00':'#9AA0C0'}">${m.branch||'—'}</span></td><td>${expiry?expiry.toDateString().slice(4):'Expired'}</td><td style="color:red">Expired</td><td>${actionCell}</td></tr>`; }else{ active++;const statusBadge=isPaused?`<span style="color:#9AA0C0">⏸️ Paused ${!isPaid?'(Pending)':''}</span>`:diff===0?`<span style="color:#ffaa00">Today</span>`:`<span style="color:#9AA0C0">● Active</span>`; activeHTML+=`<tr><td>${m.name}<br><small style="color:#666">${m.phone}<br>${m.membershipId||''}</small></td><td>${m.phone}</td><td>${displayPlan}</td><td><span style="background:#222;padding:2px 6px;border-radius:5px;font-size:11px;color:${String(m.branch||'').toLowerCase().includes('enugu')?'#ffaa00':'#9AA0C0'}">${m.branch||'—'}</span></td><td>${expiryDisplay}</td><td>${statusBadge}</td><td>${actionCell}</td></tr>`; if(diff===0&&!isPaused){soon++;todayHTML+=`<tr><td>${m.name}</td><td>${m.phone}</td><td>${displayPlan}</td><td>${m.branch||'—'}</td><td>${actionCell}</td></tr>`;} }
     });
     document.getElementById('todayTable').querySelector('tbody').innerHTML=todayHTML||`<tr><td colspan="4" style="color:#666">No one</td></tr>`;
@@ -655,7 +656,34 @@ if(isPaused){
 
 const UMUAGU_BLUE = '#0A0A8A';
 
+function cleanPlanForCard(plan){
+  var str = String(plan||"");
+  if(!str) return "";
+  // Split the messy "+ Ext:" parts
+  var parts = str.split("+ Ext:");
+  var total = 0;
+  var isWith = false;
+  parts.forEach(function(p){
+    var low = p.toLowerCase();
+    if(low.indexOf("with coaching")>-1 && low.indexOf("without")==-1) isWith = true;
+    // Convert each part to days
+    if(low.indexOf("daily")>-1) total += 1;
+    else if(low.indexOf("2 week")>-1) total += 14;
+    else if(low.indexOf("weekly")>-1) total += 7;
+    else if(low.indexOf("3 months")>-1) total += 90;
+    else if(low.indexOf("6 months")>-1) total += 180;
+    else if(low.indexOf("monthly")>-1) total += 30;
+    else {
+      var m = low.match(/(\d+)\s*day/);
+      if(m) total += parseInt(m[1],10);
+    }
+  });
+  if(total===0) return str; // fallback - show original if we can't parse
+  return total + " days " + (isWith ? "with coaching" : "without coaching");
+}
+
 window.openFullCard = function(m){
+    const cleanPlan = cleanPlanForCard(m.plan);
   const profile = m.profile || 'https://ui-avatars.com/api/?name=U&background=0A0A8A&color=9AA0C0&size=300';
   const qr = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=0A0A8A&data=${m.membershipId||m.phone||'test'}`;
 
@@ -671,7 +699,7 @@ window.openFullCard = function(m){
     <div style="width:100%;max-width:400px;margin-top:28px">
       <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Name</span><b style="color:${UMUAGU_BLUE}">${m.name||''}</b></div>
       <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Membership ID</span><b style="color:${UMUAGU_BLUE}">${m.membershipId||''}</b></div>
-      <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Plan</span><b style="color:${UMUAGU_BLUE}">${m.plan||''}</b></div>
+<div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;gap:10px;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE};white-space:nowrap">Plan</span><b style="color:${UMUAGU_BLUE};text-align:right;white-space:normal">${cleanPlan}</b></div>
       <div style="background:#9AA0C09AA0C0;border-radius:20px;padding:16px 20px;display:flex;justify-content:space-between;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06)"><span style="color:${UMUAGU_BLUE}">Expiry</span><b style="color:${UMUAGU_BLUE}">${(function(d){ try{ const dt=new Date(d); return isNaN(dt)?d:dt.toDateString(); }catch(e){return d} })(m.expiry||'') }</b></div>
     </div>
     <div style="background:#9AA0C09AA0C0;border-radius:24px;padding:18px;margin-top:18px;box-shadow:0 10px 28px rgba(0,0,0,0.08);text-align:center">
@@ -776,13 +804,92 @@ function updateAdminPlanOptions(){
   const branch = document.getElementById('addBranch').value || 'Nsukka';
   const sel = document.getElementById('addPlan');
   const maps = {
-    Nsukka: [['Daily Without Coaching',2500],['Weekly Without Coaching',7000],['2 Weeks Without Coaching',13000],['2 Weeks With Coaching',30000],['Monthly Without Coaching',20000],['Monthly With Coaching',50000],['3 Months Without Coaching',55000],['6 Months Without Coaching',100000]],
-    Enugu: [['Daily Without Coaching',2000],['Weekly Without Coaching',5500],['2 Weeks Without Coaching',10000],['Monthly Without Coaching',17000],['3 Months Without Coaching',36000],['6 Months Without Coaching',70000]]
+    Nsukka: [['Daily Without Coaching',2500],['Weekly Without Coaching',7000],['2 Weeks Without Coaching',13000],['2 Weeks With Coaching',43000],['Monthly Without Coaching',20000],['Monthly With Coaching',70000],['3 Months Without Coaching',55000],['6 Months Without Coaching',100000]],
+    Enugu: [['Daily Without Coaching',2000],['Weekly Without Coaching',5000],['2 Weeks Without Coaching',10000],['2 Weeks With Coaching',40000],['Monthly Without Coaching',17000],['Monthly With Coaching',67000],['3 Months Without Coaching',36000],['6 Months Without Coaching',70000]]
   };
   const list = maps[branch] || maps.Nsukka;
   sel.innerHTML = '<option value="">Select Plan</option>';
   list.forEach(([name,price])=>{ sel.innerHTML += `<option value="${name}">${name} - ₦${price.toLocaleString()}</option>`; });
 }
+
+let currentSchedulePhone = "";
+let currentScheduleName = "";
+
+function showSchedule(phone, name){
+  currentSchedulePhone = String(phone||"");
+  currentScheduleName = String(name||"");
+  document.getElementById('scheduleImg').src = SCHEDULE_IMG;
+  document.getElementById('scheduleForName').innerText = name ? "For: " + name : "";
+  document.getElementById('scheduleModal').style.display = 'block';
+}
+function closeSchedule(){
+  document.getElementById('scheduleModal').style.display = 'none';
+}
+async function getScheduleFile(){
+  // Get the image as a real file - fast, no html2canvas
+  const res = await fetch(SCHEDULE_IMG);
+  const blob = await res.blob();
+  return new File([blob], "UmuAgu-Weekly-Plan.jpg", {type: "image/jpeg"});
+}
+
+async function downloadSchedule(){
+  try{
+    const file = await getScheduleFile();
+    // Try Share first - this is what puts it in Gallery / Photos
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({
+        files: [file],
+        title: "UmuAgu Weekly Plan",
+        text: "UmuAgu Weekly Plan"
+      });
+      return;
+    }
+    // Fallback if Share not supported - normal download
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url; a.download = "UmuAgu-Weekly-Plan.jpg"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    alert("Downloaded. If you don't see it in Gallery, go to Files > Downloads > move it to Pictures, or use Send to WhatsApp button instead.");
+  }catch(e){
+    // User cancelled share - do nothing
+    console.log("Share cancelled");
+  }
+}
+
+async function sendScheduleWhatsApp(){
+  try{
+    const file = await getScheduleFile();
+    const text = `Hi ${currentScheduleName} 💪\n\nHere is your UmuAgu Weekly Plan 👇\nMorning: 7:30am | Evening: 5:00pm\nBe 5 minutes early. Bring water and a towel!\n\n- UmuAgu Gym`;
+
+    // BEST WAY: Share image + text straight to WhatsApp - no gallery needed
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({
+        files: [file],
+        title: "UmuAgu Weekly Plan",
+        text: text
+      });
+      return;
+    }
+
+    // Fallback: old way - download + open WhatsApp chat
+    downloadSchedule();
+    const clean = String(currentSchedulePhone).replace(/[^0-9]/g,'').replace(/^0/,'234');
+    setTimeout(()=>{ window.location.href = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`; }, 600);
+  }catch(e){
+    console.log("Share cancelled");
+  }
+}
 </script>
+<div id="scheduleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999;overflow:auto;padding:15px">
+  <div style="max-width:520px;margin:20px auto;background:#fff;border-radius:16px;padding:12px">
+    <img id="scheduleImg" src="" style="width:100%;border-radius:12px;display:block">
+    <p id="scheduleForName" style="text-align:center;color:#666;font-size:12px;margin:8px 0 0 0"></p>
+    <div style="display:flex; gap:10px;margin-top:12px">
+      <button onclick="sendScheduleWhatsApp()" style="flex:1;padding:14px;border-radius:12px;background:#25D366;color:#fff;font-weight:800;border:none;cursor:pointer">📲 Send to WhatsApp</button>
+    <button onclick="closeSchedule()" style="flex:1;padding:14px;border-radius:12px;background:#fff;color:#0A0A8A;font-weight:800;border:1.5px solid #0A0A8A;cursor:pointer">✕ Cancel</button>
+    </div>
+    
+  </div>
+</div>
 </body>
 </html>
