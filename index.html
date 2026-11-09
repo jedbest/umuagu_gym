@@ -843,11 +843,11 @@ function sendScheduleWhatsApp(){
   <div style="max-width:520px;margin:20px auto;background:#fff;border-radius:16px;padding:12px">
     <img id="scheduleImg" src="" style="width:100%;border-radius:12px;display:block">
     <p id="scheduleForName" style="text-align:center;color:#666;font-size:12px;margin:8px 0 0 0"></p>
-    <div style="display:flex; gap:10px;margin-top:12px">
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button onclick="downloadSchedule()" style="flex:1;padding:14px;border-radius:12px;background:#0A0A8A;color:#fff;font-weight:800;border:none;cursor:pointer">⬇️ Download</button>
       <button onclick="sendScheduleWhatsApp()" style="flex:1;padding:14px;border-radius:12px;background:#25D366;color:#fff;font-weight:800;border:none;cursor:pointer">📲 Send to WhatsApp</button>
-    <button onclick="closeSchedule()" style="flex:1;padding:14px;border-radius:12px;background:#fff;color:#0A0A8A;font-weight:800;border:1.5px solid #0A0A8A;cursor:pointer">✕ Cancel</button>
     </div>
-    
+    <button onclick="closeSchedule()" style="width:100%;margin-top:10px;padding:14px;border-radius:12px;background:#fff;color:#0A0A8A;font-weight:800;border:1.5px solid #0A0A8A;cursor:pointer">✕ Cancel - Back to Admin</button>
   </div>
 </div>
 </body>
