@@ -862,14 +862,14 @@ async function sendScheduleWhatsApp(){
     const text = `Hi ${currentScheduleName} 💪\n\nHere is your UmuAgu Weekly Plan 👇\nMorning: 7:30am | Evening: 5:00pm\nBe 5 minutes early. Bring water and a towel!\n\n- UmuAgu Gym`;
 
     // BEST WAY: Share image + text straight to WhatsApp - no gallery needed
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({
-        files: [file],
-        title: "UmuAgu Weekly Plan",
-        text: text
-      });
-      return;
-    }
+   // if(navigator.canShare && navigator.canShare({files:[file]})){
+     // await navigator.share({
+       // files: [file],
+        //title: "UmuAgu Weekly Plan",
+       // text: text
+      //});
+      //return;
+    //}
 
     // Fallback: old way - download + open WhatsApp chat
     downloadSchedule();
