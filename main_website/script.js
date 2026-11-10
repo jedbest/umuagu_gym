@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyX68zoviOnfHOGZLUQeYgUawDoLQaD4iliWbn57qb2a3DgMOzKQfWw8NvC-uJTJ0J3/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiKgERLuu-vXugBYHUy5aQsCMsWcTSvIPKDxiZ9hebpt4fx1Hr0DIBvJtSeajUarsD/exec";
 const PRICES = {
   Nsukka: {
     'Daily Without Coaching': 2500,
@@ -12,7 +12,7 @@ const PRICES = {
   },
   Enugu: {
     'Daily Without Coaching': 2000,
-    'Weekly Without Coaching': 5000,
+    'Weekly Without Coaching': 5500,
     '2 Weeks Without Coaching': 10000,
     '2 Weeks With Coaching': 40000,
     'Monthly Without Coaching': 17000,
@@ -162,12 +162,16 @@ function isWithCoaching(plan){
   return String(plan||"").toLowerCase().indexOf("with coaching")>-1;
 }
 
-// FIXED: exact days addition, no timezone shift
-function getExpiry(plan, fromDate = new Date()){
+// TODAY = Day 1, expiry = 8PM of last day
+// New registration: TODAY + (days - 1) -> Daily today = today, 2 days today = tomorrow
+// Extension: OLD expiry + FULL days -> old expiry 10th + 2 days = 12th (10th already counted)
+function getExpiry(plan, fromDate = new Date(), isExtension = false){
   const d = new Date(fromDate);
   d.setHours(0,0,0,0);
   const days = getDaysFromPlan(plan);
-  const newD = new Date(d.getFullYear(), d.getMonth(), d.getDate() + days);
+  const add = isExtension ? days : days - 1;
+  const newD = new Date(d.getFullYear(), d.getMonth(), d.getDate() + add);
+  newD.setHours(20,0,0,0); // Set expiry to 8PM
   return newD.toISOString().split('T')[0];
 }
 
@@ -371,11 +375,11 @@ if(!hasPhoto) missing.push('Profile Photo');
         const expD = parseDateCheck(exp);
         const today = new Date(); today.setHours(0,0,0,0);
 
-        if(expD && expD >= today){
-          // ACTIVE - EXTEND
-          isTopUp = true;
-          expiryDate = getExpiry(plan, expD);
-          submitBtn.innerText = "Extending...";
+     if(expD && expD >= today){
+  // ACTIVE - EXTEND - add FULL days on top of old expiry
+  isTopUp = true;
+  expiryDate = getExpiry(plan, expD, true);
+  submitBtn.innerText = "Extending...";
         } else {
           // EXPIRED - new expiry from today
           isTopUp = true; // still topup but from today
