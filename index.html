@@ -108,6 +108,86 @@ td small{font-size:11.5px}
 #receiptModal img,#receiptModal iframe{width:100%;max-height:80vh;border-radius:12px;background:#000}
 input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .pass-wrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}.pass-wrap .search{padding-right:70px !important}#togglePass{position:absolute;right:45px;top:50%;transform:translateY(-70%);cursor:pointer;color:#888;font-size:16px;z-index:2}#passStatus{position:absolute;right:15px;top:50%;transform:translateY(-70%);font-size:16px}
+
+/* ===== STAFF MODAL - Professional ===== */
+.btn-staff-open{
+  background:#0A0A8A; color:#fff; border:none;
+  padding:12px 20px; border-radius:12px;
+  font-size:14px; font-weight:800; cursor:pointer;
+  box-shadow:0 4px 14px rgba(10,10,138,.4);
+}
+.btn-staff-open:hover{ background:#1a1ab0; }
+
+.staff-modal-overlay{
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.7); backdrop-filter:blur(4px);
+  align-items:center; justify-content:center; padding:15px;
+}
+.staff-modal-overlay.open{ display:flex; }
+
+.staff-modal{
+  background:#111118; width:100%; max-width:440px;
+  border-radius:18px; padding:20px;
+  border:1px solid #222; color:#fff;
+  max-height:90vh; overflow-y:auto;
+  box-shadow:0 20px 50px rgba(0,0,0,.6);
+}
+.staff-modal-header{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+}
+.staff-modal-title{ font-size:19px; font-weight:900; }
+.staff-modal-sub{ font-size:12px; color:#9AA0C0; margin-top:4px; line-height:1.4; }
+.staff-close{
+  background:#222; color:#fff; border:none; width:32px; height:32px;
+  border-radius:50%; cursor:pointer; font-size:14px; flex-shrink:0;
+}
+
+.staff-form{ margin-top:18px; display:flex; flex-direction:column; gap:6px; }
+.staff-form label{ font-size:12px; font-weight:700; color:#9AA0C0; margin-top:8px; }
+.staff-input{
+  background:#1e1e28; color:#fff; border:1px solid #2a2a3a;
+  padding:12px 14px; border-radius:10px; font-size:14px; outline:none; width:100%; box-sizing:border-box;
+}
+.staff-input:focus{ border-color:#0A0A8A; background:#22222f; }
+.staff-input::placeholder{ color:#666; }
+
+.btn-staff-create{
+  margin-top:14px; background:#00C853; color:#fff; border:none;
+  padding:13px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer;
+}
+.btn-staff-create:disabled{ opacity:.6; }
+
+.staff-msg{
+  font-size:13px; line-height:1.5; min-height:18px; margin-top:6px;
+}
+.staff-msg.success{
+  background:#0f2a1a; border:1px solid #00C853; padding:10px; border-radius:10px; color:#d8ffe8;
+}
+
+.staff-divider{ height:1px; background:#222; margin:18px 0; }
+.staff-list-title{ font-weight:800; font-size:14px; margin-bottom:10px; }
+.staff-list{ display:flex; flex-direction:column; gap:10px; }
+
+.staff-card{
+  background:#1a1a24; border:1px solid #262633; border-radius:12px; padding:12px;
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+}
+.staff-card-name{ font-weight:800; font-size:14px; }
+.staff-card-meta{ font-size:12px; color:#9AA0C0; margin-top:2px; }
+.staff-badge{
+  font-size:11px; font-weight:800; padding:3px 8px; border-radius:20px; background:#222; color:#fff;
+}
+.staff-badge.active{ background:#0f2a1a; color:#4ade80; }
+.staff-badge.inactive{ background:#2a1212; color:#ff8080; }
+
+.btn-staff-toggle{
+  border:none; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap;
+}
+.btn-staff-toggle.deactivate{ background:#ff3b30; color:#fff; }
+.btn-staff-toggle.activate{ background:#00C853; color:#fff; }
+.btn-copy{
+  background:#0A0A8A; color:#fff; border:none; padding:6px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; margin-top:6px;
+}
 </style>
 </head>
 <body>
@@ -115,16 +195,23 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   <div style="color:#FFF;font-weight:900;font-size:20px">🔒 ADMIN LOGIN</div>
   <div style="color:#666;font-size:12px;margin-bottom:15px">UMUAGU GYM ONLY</div>
   <form autocomplete="off" onsubmit="event.preventDefault(); checkPassword();">
-  <div class="pass-wrap">
-    <input type="password" id="passInput" placeholder="Enter Password" class="search" style="margin:0 0 10px 0" autocomplete="off">
-    <span id="togglePass"><i class="fa-solid fa-eye"></i></span>
-    <span id="passStatus"></span>
+    <!-- USERNAME - NEW -->
+    <div class="pass-wrap">
+      <input type="text" id="userInput" placeholder="Username" class="search" style="margin:0 0 10px 0" autocomplete="off" autocapitalize="off" spellcheck="false">
     </div>
-  <button type="submit" class="btn btn-green">UNLOCK</button>
-</form>
+
+    <!-- PASSWORD - SAME AS BEFORE -->
+    <div class="pass-wrap">
+      <input type="password" id="passInput" placeholder="Enter Password" class="search" style="margin:0 0 10px 0" autocomplete="off">
+      <span id="togglePass"><i class="fa-solid fa-eye"></i></span>
+      <span id="passStatus"></span>
+    </div>
+
+    <button type="submit" class="btn btn-green">UNLOCK</button>
+  </form>
   <div id="loginError" style="color:red;font-size:13px;margin-top:10px"></div>
 </div>
-<div id="dashboard">
+<div id="dashboard" style="display: none;">
 <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;flex-wrap:wrap;gap:8px">
   <div>
     <h2 style="color:#9AA0C0;margin:0;font-size:18px">UMUAGU GYM ADMIN</h2>
@@ -154,7 +241,130 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     </div>
   </div>
 </div>
+
+
     
+<!-- STAFF ACCOUNTS BUTTON - Owner only, showDashboard() will show/hide this -->
+<div id="staffSection" style="display:none; margin:15px 0;">
+  <button onclick="openStaffModal()" class="btn-staff-open">
+    👥 Staff Accounts
+  </button>
+</div>
+
+<!-- ===== REVENUE + REPORTS - EDITED TO MATCH STAFF STYLE ===== -->
+<!-- Now just 3 buttons in one row, like Staff Accounts. Click = popup. -->
+<!-- ===== ALL BUTTONS LEFT TO RIGHT - ONE ROW ===== -->
+<div id="ownerButtons" style="display:grid;grid-template-columns:1fr 1fr; gap: 10px;">
+
+
+  <button onclick="openEverModal()" class="btn-staff-open" style="background:#0AA04A; white-space:nowrap; flex-shrink:0; padding:12px 16px; height:48px; display:flex; align-items:center;">
+    🏆 Total Ever — ₦<span id="totalEver">0</span>
+  </button>
+
+  <button onclick="openReportModal()" class="btn-staff-open" style="background:#fff; color:#0A1633; white-space:nowrap; flex-shrink:0; padding:12px 16px; height:48px; display:flex; align-items:center;">
+    📊 Monthly Reports
+  </button>
+
+  <button onclick="openArchiveModal()" class="btn-staff-open" style="background:#fff; color:#0A1633; white-space:nowrap; flex-shrink:0; padding:12px 16px; height:48px; display:flex; align-items:center;">
+    📦 Past Archive
+  </button>
+
+</div>
+
+<!-- THIS MONTH POPUP - Same style as staffModal -->
+
+<!-- TOTAL EVER POPUP - Same style as staffModal -->
+<div id="everModal" class="staff-modal-overlay" onclick="if(event.target===this) closeEverModal()">
+  <div class="staff-modal">
+    <div class="staff-modal-header">
+      <div>
+        <div class="staff-modal-title">🏆 Total Revenue Ever Generated</div>
+        <div class="staff-modal-sub">All time, never resets.</div>
+      </div>
+      <button onclick="closeEverModal()" class="staff-close">✕</button>
+    </div>
+    <div style="font-size:32px; font-weight:800; margin:10px 0; color:#0AA04A;">₦<span id="totalEver2">0</span></div>
+    <div id="everArchiveMini"></div>
+  </div>
+</div>
+
+<!-- MONTHLY REPORTS POPUP - Same style as staffModal -->
+<div id="reportModal" class="staff-modal-overlay" onclick="if(event.target===this) closeReportModal()">
+  <div class="staff-modal">
+    <div class="staff-modal-header">
+      <div>
+        <div class="staff-modal-title">📊 Monthly Reports</div>
+        <div class="staff-modal-sub">See how many of each plan happened in any month.</div>
+      </div>
+      <button onclick="closeReportModal()" class="staff-close">✕</button>
+    </div>
+    <div class="staff-form">
+      <label>Select Month</label>
+      <select id="reportMonth" class="staff-input">
+        <option value="11-2026">November 2026</option>
+        <option value="10-2026">October 2026</option>
+        <option value="9-2026">September 2026</option>
+      </select>
+      <button onclick="loadMonthlyReport()" class="btn-staff-create">View Report</button>
+      <div id="reportResult" style="margin-top:15px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHIVE POPUP - Same style as staffModal -->
+<div id="archiveModal" class="staff-modal-overlay" onclick="if(event.target===this) closeArchiveModal()">
+  <div class="staff-modal">
+    <div class="staff-modal-header">
+      <div>
+        <div class="staff-modal-title">📦 Past Months Archive</div>
+        <div class="staff-modal-sub">History of cleared months.</div>
+      </div>
+      <button onclick="closeArchiveModal()" class="staff-close">✕</button>
+    </div>
+    <div id="archiveList" class="staff-list">
+      <div style="color:#666; font-size:13px;">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF MODAL - UNTOUCHED, EXACTLY AS YOU SENT -->
+<div id="staffModal" class="staff-modal-overlay" onclick="if(event.target===this) closeStaffModal()">
+  <div class="staff-modal">
+    <div class="staff-modal-header">
+      <div>
+        <div class="staff-modal-title">👥 Staff Accounts</div>
+        <div class="staff-modal-sub">Create logins for your workers. They only see their branch.</div>
+      </div>
+      <button onclick="closeStaffModal()" class="staff-close">✕</button>
+    </div>
+
+    <div class="staff-form">
+      <label>Worker Name</label>
+      <input id="staffName" placeholder="e.g. Chidi" class="staff-input" autocomplete="off">
+
+      <label>Username</label>
+      <input id="staffUser" placeholder="e.g. chidi-enugu" class="staff-input" autocomplete="off">
+
+      <label>Branch</label>
+      <select id="staffBranch" class="staff-input">
+        <option>Enugu</option>
+        <option>Nsukka</option>
+      </select>
+
+      <button onclick="createStaff()" id="createStaffBtn" class="btn-staff-create">
+        Generate Password + Create
+      </button>
+      <div id="staffCreateMsg" class="staff-msg"></div>
+    </div>
+
+    <div class="staff-divider"></div>
+
+    <div class="staff-list-title">Active Accounts</div>
+    <div id="staffList" class="staff-list">
+      <div style="color:#666; font-size:13px;">Loading...</div>
+    </div>
+  </div>
+</div>
    
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr; justify-content: center; gap: 35px;">
@@ -192,15 +402,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyX68zoviOnfHOGZLUQeYgUawDoLQaD4iliWbn57qb2a3DgMOzKQfWw8NvC-uJTJ0J3/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiKgERLuu-vXugBYHUy5aQsCMsWcTSvIPKDxiZ9hebpt4fx1Hr0DIBvJtSeajUarsD/exec";
 
 const SCHEDULE_IMG = "schedule.png"; // 2024-06-05 - Updated schedule image
-const LOGINS = {
-  "NSUKKA2024": { branch: "Nsukka", role: "admin", name: "Nsukka Admin" },
-  "ENUGU2024": { branch: "Enugu", role: "admin", name: "Enugu Admin" },
-  "UMUAGU2024": { branch: "All", role: "owner", name: "Owner" }
-};
-
 let currentLogin = null;
 
 function logout(){
@@ -216,32 +420,88 @@ function logout(){
   document.getElementById('loginError').innerText = "";
 }
 
-function checkPassword(){
+async function checkPassword(){
+  const user = document.getElementById('userInput').value.trim();
   const pass = document.getElementById('passInput').value.trim();
-  if(LOGINS[pass]){
-    currentLogin = LOGINS[pass];
-    // NO localStorage save - so next time it must ask again
+  const err = document.getElementById('loginError');
+
+  if(!user || !pass){
+    err.innerText = "Enter username and password";
+    return;
+  }
+
+  err.innerText = "Checking...";
+
+  try{
+    const res = await fetch(SCRIPT_URL + "?action=login&username=" + encodeURIComponent(user) + "&password=" + encodeURIComponent(pass) + "&t=" + Date.now(), {cache:"no-store"});
+    const data = await res.json();
+
+    if(!data.ok){
+      err.innerText = data.msg + " ❌";
+      // Clear password, keep username so they can retry fast
+      document.getElementById('passInput').value = "";
+      return;
+    }
+
+    currentLogin = {
+      branch: data.branch,
+      role: data.role === "staff" ? "admin" : "owner",
+      name: data.name
+    };
+
+    // IMPORTANT: DO NOT save to localStorage - this is what makes it ask every refresh
+    // No localStorage.setItem here on purpose
+
+    // Clear inputs after login so back-button doesn't show password
+    document.getElementById('userInput').value = "";
+    document.getElementById('passInput').value = "";
+    err.innerText = "";
+
+    const staffSec = document.getElementById('staffSection');
+    if(staffSec){
+      staffSec.style.display = (currentLogin.role === "owner") ? "block" : "none";
+      if(currentLogin.role === "owner") loadStaffList();
+    }
+
     showDashboard();
-  } else {
-    document.getElementById('loginError').innerText = "Wrong password! ❌";
+  }catch(e){
+    err.innerText = "Network error, try again";
   }
 }
 
 function showDashboard(){
-  document.getElementById('loginBox').style.display="none";
-  document.getElementById('dashboard').style.display="block";
+  document.getElementById('loginBox').style.display = "none";
+  document.getElementById('dashboard').style.display = "block";
+
   const welcome = document.getElementById('welcomeBranch');
   if(welcome && currentLogin){
     welcome.innerText = `Welcome - ${currentLogin.name}`;
-    if(currentLogin.role === "owner"){ welcome.innerText += " (All Branches)"; }
-    else { welcome.innerText += ` - ${currentLogin.branch} Branch`; }
+    if(currentLogin.role === "owner"){ 
+      welcome.innerText += " (All Branches)"; 
+    } else { 
+      welcome.innerText += ` - ${currentLogin.branch} Branch`; 
+    }
   }
+
   const revenueBox = document.getElementById('revenueBox');
   if(currentLogin && currentLogin.role !== "owner"){
     if(revenueBox) revenueBox.style.display = "none";
   } else {
     if(revenueBox) revenueBox.style.display = "block";
   }
+
+    // Total Ever + Monthly Reports + Past Archive - Owner only (same method as Revenue)
+  const ownerBtns = document.getElementById('ownerButtons');
+  if(ownerBtns){
+    ownerBtns.style.display = (currentLogin && currentLogin.role === "owner") ? "grid" : "none";
+  }
+  // Staff Management - Owner only
+  const staffSec = document.getElementById('staffSection');
+  if(staffSec){
+    staffSec.style.display = (currentLogin && currentLogin.role === "owner") ? "block" : "none";
+    if(currentLogin && currentLogin.role === "owner") loadStaffList();
+  }
+
   loadMembers();
 }
 
@@ -260,6 +520,7 @@ togglePass.addEventListener("click", () => {
   }
 });
 
+// NEW: No more live LOGINS check - we can't know if password is right until server says so
 passInput.addEventListener("input", () => {
   const val = passInput.value.trim();
   const loginError = document.getElementById('loginError');
@@ -267,16 +528,13 @@ passInput.addEventListener("input", () => {
     passStatus.innerHTML = "";
     passInput.style.borderColor = "";
     loginError.innerText = "";
-  } else if(LOGINS[val]){
-    passStatus.innerHTML = "✅";
+  } else {
+    // Just neutral - don't show ✅ or ❌ until UNLOCK is pressed
+    passStatus.innerHTML = "";
     passInput.style.borderColor = "#9AA0C0";
     loginError.innerText = "";
-  } else {
-    passStatus.innerHTML = "❌";
-    passInput.style.borderColor = "red";
   }
 });
-
 
 // NO AUTO LOGIN - Always ask for password, always empty
 localStorage.removeItem('umuagu_admin');
@@ -285,6 +543,11 @@ localStorage.removeItem('umuagu_branch');
 if(passInput){
   passInput.value = "";
   passInput.setAttribute('autocomplete','new-password');
+}
+const userInput = document.getElementById('userInput');
+if(userInput){
+  userInput.value = "";
+  userInput.setAttribute('autocomplete','off');
 }
 
 // --- REST OF YOUR FUNCTIONS (unchanged) ---
@@ -503,6 +766,27 @@ function getMemberPhoto(m){
 // SEND CARD TO WHATSAPP - ADD THIS FUNCTION
 async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase64){
   // Create ID card canvas
+ // If caller passed a Drive URL instead of base64, convert it first
+if(profileBase64 && profileBase64.indexOf('drive.google.com') > -1){
+  try{
+    const pid = profileBase64.split('id=')[1]?.split('&')[0] || "";
+    if(pid){
+      const r = await fetch(SCRIPT_URL + "?action=getPhoto&id=" + pid);
+      const jj = await r.json();
+      if(jj.success && jj.base64) profileBase64 = jj.base64;
+    }
+  }catch(e){}
+}
+if(profileBase64 && !profileBase64.startsWith('data:') && profileBase64.indexOf('http') === 0){
+  // Last resort: fetch as blob -> base64 (only works if CORS allows it)
+  try{
+    const rb = await fetch(profileBase64);
+    const bl = await rb.blob();
+    profileBase64 = await new Promise(res=>{
+      const fr = new FileReader(); fr.onload = ()=>res(fr.result); fr.readAsDataURL(bl);
+    });
+  }catch(e){}
+}
   const canvas = document.createElement('canvas');
   canvas.width=600; canvas.height=380;
   const ctx=canvas.getContext('2d');
@@ -510,8 +794,8 @@ async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase
   ctx.fillStyle="#000"; ctx.fillRect(0,0,600,380);
   ctx.fillStyle="#9AA0C0"; ctx.fillRect(0,0,600,8);
   // Photo
-  if(profileBase64){
-    const img=new Image(); img.src=profileBase64;
+ if(profileBase64){
+  const img=new Image(); img.crossOrigin="anonymous"; img.src=profileBase64;
     await new Promise(r=>img.onload=r);
     ctx.save();
     ctx.beginPath(); ctx.arc(80,90,55,0,Math.PI*2); ctx.clip();
@@ -567,14 +851,16 @@ async function addMemberManually(){
   const isPaid=payMethod.includes('Immediately');
  const price=isPaid?getPriceFromPlan(plan, branch):0;
   const expiry=getExpiryFromPlan(plan);
-  const data={
-    name,phone,email,session,plan,goal:"general",
-    payMethod,price,amount:price,expiry,branch,
-    ProfilePic: profilePic // <-- FIX: SAVE TO SHEET
-  };
+// Admin sends photo in same format as website - object with .data
+const cleanBase64 = String(profilePic||"").indexOf('base64,') > -1 ? String(profilePic).split('base64,')[1] : String(profilePic||"");
+const data={
+  name,phone,email,session,plan,goal:"general",
+  payMethod,price,amount:price,expiry,branch,
+  profilePic: { data: cleanBase64, mime: 'image/jpeg', name: 'profile_'+phone+'.jpg' }
+};
   try{
     await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(data)});
-    msg.innerHTML='<span style="color:#9AA0C0">✅ Added with photo!</span>';
+msg.innerHTML='<span style="color:#9AA0C0">✅ Sent! Check Active Registrations below to confirm it appeared.</span>';
     setTimeout(()=>{
       document.getElementById('addBox').style.display='none';
       loadMembers();
@@ -711,7 +997,7 @@ function cleanPlanForCard(plan){
 
 window.openFullCard = function(m){
     const cleanPlan = cleanPlanForCard(m.plan);
-  const profile = m.profile || 'https://ui-avatars.com/api/?name=U&background=0A0A8A&color=9AA0C0&size=300';
+  const profile = m.profile || m.profilePic || m.ProfilePic || 'https://ui-avatars.com/api/?name=U&background=0A0A8A&color=9AA0C0&size=300';
   const qr = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=0A0A8A&data=${m.membershipId||m.phone||'test'}`;
 
   document.getElementById('umuaguCard').innerHTML = `
@@ -751,30 +1037,33 @@ document.getElementById('shareBtn').onclick = async function(){
     const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`;
 
     try{
-      const imgEl = document.getElementById('cardProfileImg');
-      if(imgEl && imgEl.src && !imgEl.src.startsWith('data:')){
-        await new Promise((resolve)=>{
-          if(imgEl.complete) resolve();
-          else { imgEl.onload = resolve; imgEl.onerror = resolve; }
+     const imgEl = document.getElementById('cardProfileImg');
+if(imgEl && imgEl.src && !imgEl.src.startsWith('data:') && imgEl.src.indexOf('drive.google.com') > -1){
+  try{
+    const photoId = imgEl.src.split('id=')[1]?.split('&')[0] || "";
+    if(photoId){
+      const res = await fetch(SCRIPT_URL + "?action=getPhoto&id=" + photoId);
+      const j = await res.json();
+      if(j.success && j.base64){
+        imgEl.src = j.base64;
+        await new Promise(r=>{
+          if(imgEl.complete) r();
+          else { imgEl.onload = r; imgEl.onerror = r; setTimeout(r, 1000); }
         });
-        try{
-          const c = document.createElement('canvas');
-          c.width = 300; c.height = 300;
-          const ctx = c.getContext('2d');
-          ctx.drawImage(imgEl, 0, 0, 300, 300);
-          imgEl.src = c.toDataURL('image/jpeg', 0.9);
-          await new Promise(r=>setTimeout(r,300));
-        }catch(e){}
+        await new Promise(r=>setTimeout(r,300));
       }
+    }
+  }catch(e){ console.log("Photo convert failed", e); }
+}
 
       const el = document.getElementById('umuaguCard');
-      const canvas = await html2canvas(el, {
-        scale: 2, 
-        backgroundColor: '#F5F6FB',
-        useCORS: true,
-        allowTaint: true,
-        logging: false
-      });
+   const canvas = await html2canvas(el, {
+  scale: 2, 
+  backgroundColor: '#F5F6FB',
+  useCORS: true,
+  allowTaint: false,
+  logging: false
+});
       
       canvas.toBlob((blob)=>{
         const fileName = `UMUAGU-${m.membershipId||'card'}.png`;
@@ -879,6 +1168,198 @@ function sendScheduleWhatsApp(){
     window.location.href = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
   }, 800);
 }
+function openStaffModal(){
+  document.getElementById('staffModal').classList.add('open');
+  document.getElementById('staffCreateMsg').innerHTML = "";
+  loadStaffList();
+}
+function closeStaffModal(){
+  document.getElementById('staffModal').classList.remove('open');
+}
+
+async function createStaff(){
+  const name = document.getElementById('staffName').value.trim();
+  const username = document.getElementById('staffUser').value.trim().toLowerCase();
+  const branch = document.getElementById('staffBranch').value;
+  const msg = document.getElementById('staffCreateMsg');
+  const btn = document.getElementById('createStaffBtn');
+
+  if(!name || !username){ msg.innerHTML = "Enter worker name and username"; msg.className = "staff-msg"; return; }
+
+  btn.disabled = true; btn.innerText = "Creating...";
+  try{
+    const res = await fetch(SCRIPT_URL + "?action=createStaff&data=" + encodeURIComponent(JSON.stringify({name, username, branch})) + "&t=" + Date.now());
+    const out = await res.json();
+    if(out.ok){
+      msg.className = "staff-msg success";
+      msg.innerHTML = `✅ Created for <b>${out.name}</b><br>
+        Username: <b>${out.username}</b><br>
+        Password: <b style="font-size:16px; letter-spacing:1px;">${out.password}</b><br>
+        Branch: ${out.branch}<br>
+        <button class="btn-copy" onclick="navigator.clipboard.writeText('${out.password}'); this.innerText='Copied ✅'">📋 Copy Password</button>`;
+      document.getElementById('staffName').value = "";
+      document.getElementById('staffUser').value = "";
+      loadStaffList();
+    } else {
+      msg.className = "staff-msg"; msg.style.color = "#ff8080";
+      msg.innerText = out.msg;
+    }
+  }catch(e){ msg.innerText = "Network error"; }
+  btn.disabled = false; btn.innerText = "Generate Password + Create";
+}
+
+async function loadStaffList(){
+  const listEl = document.getElementById('staffList');
+  try{
+    const res = await fetch(SCRIPT_URL + "?action=listStaff&t=" + Date.now());
+    const list = await res.json();
+    if(!list.length){ listEl.innerHTML = `<div style="color:#666; font-size:13px;">No staff yet</div>`; return; }
+    listEl.innerHTML = list.map(s => `
+      <div class="staff-card">
+        <div>
+          <div class="staff-card-name">${s.name} <span style="color:#666; font-weight:400;">@${s.username}</span></div>
+          <div class="staff-card-meta">${s.branch} • ${s.role}</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+          <span class="staff-badge ${s.status === 'Active' ? 'active' : 'inactive'}">${s.status}</span>
+          ${s.role !== 'owner' ? `<button class="btn-staff-toggle ${s.status === 'Active' ? 'deactivate' : 'activate'}" onclick="toggleStaff('${s.username}','${s.status === 'Active' ? 'Inactive' : 'Active'}')">${s.status === 'Active' ? 'Deactivate' : 'Activate'}</button>` : '<span style="font-size:11px; color:#666;">Owner</span>'}
+        </div>
+      </div>`).join('');
+  }catch(e){ listEl.innerHTML = "Error loading"; }
+}
+
+async function toggleStaff(user, status){
+  if(!confirm((status === 'Active' ? 'Activate' : 'Deactivate') + ' ' + user + '?')) return;
+  await fetch(SCRIPT_URL + "?action=toggleStaff&username=" + encodeURIComponent(user) + "&status=" + status);
+  loadStaffList();
+}
+
+// ===== REVENUE + REPORTS JS - EDITED ONLY TO USE POPUPS, SAME FUNCTION NAMES =====
+function openEverModal(){
+  document.getElementById('everModal').classList.add('open');
+  loadArchive();
+}
+function closeEverModal(){
+  document.getElementById('everModal').classList.remove('open');
+}
+function openReportModal(){
+  document.getElementById('reportModal').classList.add('open');
+}
+function closeReportModal(){
+  document.getElementById('reportModal').classList.remove('open');
+}
+function openArchiveModal(){
+  document.getElementById('archiveModal').classList.add('open');
+  loadArchive();
+}
+function closeArchiveModal(){
+  document.getElementById('archiveModal').classList.remove('open');
+}
+
+function loadRevenue() {
+  google.script.run.withSuccessHandler(function(total) {
+    document.getElementById("revenueTotal").innerText = Number(total).toLocaleString();
+    document.getElementById("revenueTotal2").innerText = Number(total).toLocaleString();
+  }).getRevenue();
+  
+  google.script.run.withSuccessHandler(function(totalEver) {
+    document.getElementById("totalEver").innerText = Number(totalEver).toLocaleString();
+    document.getElementById("totalEver2").innerText = Number(totalEver).toLocaleString();
+  }).getTotalEver();
+}
+
+function loadMonthBreakdown() {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const year = now.getFullYear();
+  google.script.run.withSuccessHandler(function(res) {
+    if (!res.success || res.plans.length === 0) {
+      document.getElementById("monthBreakdown").innerHTML = "<p style='color:#666; font-size:13px;'>No payments yet this month.</p>";
+      return;
+    }
+    let html = `<table style="width:100%; border-collapse: collapse;">`;
+    html += `<tr style="background:#0A1633; color:white;"><th style="padding:8px; text-align:left;">Plan</th><th>Count</th><th>Revenue</th></tr>`;
+    for (let p of res.plans) {
+      html += `<tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">${p.plan}</td><td style="text-align:center;">${p.count}</td><td style="text-align:right;">₦${p.revenue.toLocaleString()}</td></tr>`;
+    }
+    html += `</table><p style="color:#666; font-size:13px;">Total: ${res.totalCount} payments — ₦${res.totalRevenue.toLocaleString()}</p>`;
+    document.getElementById("monthBreakdown").innerHTML = html;
+  }).getMonthlyReport(month, year);
+}
+
+// ===== FIXED - USES FETCH LIKE STAFF, NOT google.script.run =====
+async function loadMonthlyReport() {
+  const val = document.getElementById("reportMonth").value; // e.g. "10-2026"
+  const parts = val.split("-");
+  const month = parseInt(parts[0]);
+  const year = parseInt(parts[1]);
+
+  const resultEl = document.getElementById("reportResult");
+  resultEl.innerHTML = "Loading...";
+
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=getMonthlyReport&month=" + month + "&year=" + year + "&t=" + Date.now());
+    const data = await res.json();
+    console.log("Monthly Report:", data); // check this if it still fails
+
+    if (!data.success) {
+      resultEl.innerHTML = "No data for this month.";
+      return;
+    }
+    let html = `<h3 style="color:white;">${data.month}/${data.year} — Total: ${data.totalCount} payments — Revenue: ₦${data.totalRevenue.toLocaleString()}</h3>`;
+    html += `<table style="width:100%; border-collapse: collapse; background:white; color:black; border-radius:8px; overflow:hidden;">`;
+    html += `<tr style="background:#0A1633; color:white;"><th style="padding:10px; text-align:left;">Plan</th><th>Count</th><th>Revenue</th></tr>`;
+    for (let p of data.plans) {
+      html += `<tr style="border-bottom:1px solid #ddd;"><td style="padding:10px;">${p.plan}</td><td style="text-align:center;">${p.count}</td><td style="text-align:right;">₦${p.revenue.toLocaleString()}</td></tr>`;
+    }
+    html += `</table>`;
+    if (data.plans.length === 0) html += `<p style="color:white;">No payments in this month.</p>`;
+    resultEl.innerHTML = html;
+  } catch(e) {
+    console.log(e);
+    resultEl.innerHTML = "Error loading report. Check backend - did you redeploy?";
+  }
+}
+
+async function loadArchive() {
+  const listEl = document.getElementById("archiveList");
+  if (!listEl) return;
+  listEl.innerHTML = "Loading...";
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=getArchive&t=" + Date.now());
+    const data = await res.json();
+    console.log("Archive:", data);
+
+    let html = "";
+    for (let i = 1; i < data.length; i++) {
+      html += `<div style="background:#f8f9fa; color:black; padding:12px; border-radius:10px; margin-bottom:8px;"><b>${data[i][0]}</b><br>₦${Number(data[i][1]).toLocaleString()} — Cleared on ${data[i][2]}<br><span style="color:#666; font-size:12px;">Total Ever then: ₦${Number(data[i][3]).toLocaleString()}</span></div>`;
+    }
+    if (data.length <= 1) html = "<p style='color:white;'>No past months yet. First auto-clear happens on 1st of next month.</p>";
+    listEl.innerHTML = html;
+    const everEl = document.getElementById("everArchiveMini");
+    if (everEl) everEl.innerHTML = html;
+  } catch(e) {
+    console.log(e);
+    listEl.innerHTML = "Error loading archive. Did you redeploy?";
+  }
+}
+
+async function loadAvailableMonths() {
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=getAvailableMonths&t=" + Date.now());
+    const months = await res.json();
+    if (!months || months.length === 0) return;
+    const select = document.getElementById("reportMonth");
+    select.innerHTML = "";
+    months.forEach(function(m) {
+      const opt = document.createElement("option");
+      opt.value = m.month + "-" + m.year;
+      opt.textContent = m.label;
+      select.appendChild(opt);
+    });
+  } catch(e) { console.log(e); }
+}
+
 </script>
 <div id="scheduleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999;overflow:auto;padding:15px">
   <div style="max-width:520px;margin:20px auto;background:#fff;border-radius:16px;padding:12px">
