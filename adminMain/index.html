@@ -211,7 +211,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   </form>
   <div id="loginError" style="color:red;font-size:13px;margin-top:10px"></div>
 </div>
-<div id="dashboard">
+<div id="dashboard" style="display: none;">
 <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;flex-wrap:wrap;gap:8px">
   <div>
     <h2 style="color:#9AA0C0;margin:0;font-size:18px">UMUAGU GYM ADMIN</h2>
@@ -241,6 +241,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
     </div>
   </div>
 </div>
+
+
     
 <!-- STAFF ACCOUNTS BUTTON - Owner only, showDashboard() will show/hide this -->
 <div id="staffSection" style="display:none; margin:15px 0;">
@@ -249,7 +251,83 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
   </button>
 </div>
 
-<!-- STAFF MODAL -->
+<!-- ===== REVENUE + REPORTS - EDITED TO MATCH STAFF STYLE ===== -->
+<!-- Now just 3 buttons in one row, like Staff Accounts. Click = popup. -->
+<!-- ===== ALL BUTTONS LEFT TO RIGHT - ONE ROW ===== -->
+<div id="ownerButtons" style="display:grid;grid-template-columns:1fr 1fr; gap: 10px;">
+
+
+  <button onclick="openEverModal()" class="btn-staff-open" style="background:#0AA04A; white-space:nowrap; flex-shrink:0; padding:12px 16px; height:48px; display:flex; align-items:center;">
+    🏆 Total Ever — ₦<span id="totalEver">0</span>
+  </button>
+
+  <button onclick="openReportModal()" class="btn-staff-open" style="background:#fff; color:#0A1633; white-space:nowrap; flex-shrink:0; padding:12px 16px; height:48px; display:flex; align-items:center;">
+    📊 Monthly Reports
+  </button>
+
+  <button onclick="openArchiveModal()" class="btn-staff-open" style="background:#fff; color:#0A1633; white-space:nowrap; flex-shrink:0; padding:12px 16px; height:48px; display:flex; align-items:center;">
+    📦 Past Archive
+  </button>
+
+</div>
+
+<!-- THIS MONTH POPUP - Same style as staffModal -->
+
+<!-- TOTAL EVER POPUP - Same style as staffModal -->
+<div id="everModal" class="staff-modal-overlay" onclick="if(event.target===this) closeEverModal()">
+  <div class="staff-modal">
+    <div class="staff-modal-header">
+      <div>
+        <div class="staff-modal-title">🏆 Total Revenue Ever Generated</div>
+        <div class="staff-modal-sub">All time, never resets.</div>
+      </div>
+      <button onclick="closeEverModal()" class="staff-close">✕</button>
+    </div>
+    <div style="font-size:32px; font-weight:800; margin:10px 0; color:#0AA04A;">₦<span id="totalEver2">0</span></div>
+    <div id="everArchiveMini"></div>
+  </div>
+</div>
+
+<!-- MONTHLY REPORTS POPUP - Same style as staffModal -->
+<div id="reportModal" class="staff-modal-overlay" onclick="if(event.target===this) closeReportModal()">
+  <div class="staff-modal">
+    <div class="staff-modal-header">
+      <div>
+        <div class="staff-modal-title">📊 Monthly Reports</div>
+        <div class="staff-modal-sub">See how many of each plan happened in any month.</div>
+      </div>
+      <button onclick="closeReportModal()" class="staff-close">✕</button>
+    </div>
+    <div class="staff-form">
+      <label>Select Month</label>
+      <select id="reportMonth" class="staff-input">
+        <option value="11-2026">November 2026</option>
+        <option value="10-2026">October 2026</option>
+        <option value="9-2026">September 2026</option>
+      </select>
+      <button onclick="loadMonthlyReport()" class="btn-staff-create">View Report</button>
+      <div id="reportResult" style="margin-top:15px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHIVE POPUP - Same style as staffModal -->
+<div id="archiveModal" class="staff-modal-overlay" onclick="if(event.target===this) closeArchiveModal()">
+  <div class="staff-modal">
+    <div class="staff-modal-header">
+      <div>
+        <div class="staff-modal-title">📦 Past Months Archive</div>
+        <div class="staff-modal-sub">History of cleared months.</div>
+      </div>
+      <button onclick="closeArchiveModal()" class="staff-close">✕</button>
+    </div>
+    <div id="archiveList" class="staff-list">
+      <div style="color:#666; font-size:13px;">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF MODAL - UNTOUCHED, EXACTLY AS YOU SENT -->
 <div id="staffModal" class="staff-modal-overlay" onclick="if(event.target===this) closeStaffModal()">
   <div class="staff-modal">
     <div class="staff-modal-header">
@@ -412,6 +490,11 @@ function showDashboard(){
     if(revenueBox) revenueBox.style.display = "block";
   }
 
+    // Total Ever + Monthly Reports + Past Archive - Owner only (same method as Revenue)
+  const ownerBtns = document.getElementById('ownerButtons');
+  if(ownerBtns){
+    ownerBtns.style.display = (currentLogin && currentLogin.role === "owner") ? "grid" : "none";
+  }
   // Staff Management - Owner only
   const staffSec = document.getElementById('staffSection');
   if(staffSec){
@@ -683,6 +766,27 @@ function getMemberPhoto(m){
 // SEND CARD TO WHATSAPP - ADD THIS FUNCTION
 async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase64){
   // Create ID card canvas
+ // If caller passed a Drive URL instead of base64, convert it first
+if(profileBase64 && profileBase64.indexOf('drive.google.com') > -1){
+  try{
+    const pid = profileBase64.split('id=')[1]?.split('&')[0] || "";
+    if(pid){
+      const r = await fetch(SCRIPT_URL + "?action=getPhoto&id=" + pid);
+      const jj = await r.json();
+      if(jj.success && jj.base64) profileBase64 = jj.base64;
+    }
+  }catch(e){}
+}
+if(profileBase64 && !profileBase64.startsWith('data:') && profileBase64.indexOf('http') === 0){
+  // Last resort: fetch as blob -> base64 (only works if CORS allows it)
+  try{
+    const rb = await fetch(profileBase64);
+    const bl = await rb.blob();
+    profileBase64 = await new Promise(res=>{
+      const fr = new FileReader(); fr.onload = ()=>res(fr.result); fr.readAsDataURL(bl);
+    });
+  }catch(e){}
+}
   const canvas = document.createElement('canvas');
   canvas.width=600; canvas.height=380;
   const ctx=canvas.getContext('2d');
@@ -690,8 +794,8 @@ async function sendCardOnWhatsapp(phone, name, plan, expiry, branch, profileBase
   ctx.fillStyle="#000"; ctx.fillRect(0,0,600,380);
   ctx.fillStyle="#9AA0C0"; ctx.fillRect(0,0,600,8);
   // Photo
-  if(profileBase64){
-    const img=new Image(); img.src=profileBase64;
+ if(profileBase64){
+  const img=new Image(); img.crossOrigin="anonymous"; img.src=profileBase64;
     await new Promise(r=>img.onload=r);
     ctx.save();
     ctx.beginPath(); ctx.arc(80,90,55,0,Math.PI*2); ctx.clip();
@@ -747,14 +851,16 @@ async function addMemberManually(){
   const isPaid=payMethod.includes('Immediately');
  const price=isPaid?getPriceFromPlan(plan, branch):0;
   const expiry=getExpiryFromPlan(plan);
-  const data={
-    name,phone,email,session,plan,goal:"general",
-    payMethod,price,amount:price,expiry,branch,
-    ProfilePic: profilePic // <-- FIX: SAVE TO SHEET
-  };
+// Admin sends photo in same format as website - object with .data
+const cleanBase64 = String(profilePic||"").indexOf('base64,') > -1 ? String(profilePic).split('base64,')[1] : String(profilePic||"");
+const data={
+  name,phone,email,session,plan,goal:"general",
+  payMethod,price,amount:price,expiry,branch,
+  profilePic: { data: cleanBase64, mime: 'image/jpeg', name: 'profile_'+phone+'.jpg' }
+};
   try{
     await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(data)});
-    msg.innerHTML='<span style="color:#9AA0C0">✅ Added with photo!</span>';
+msg.innerHTML='<span style="color:#9AA0C0">✅ Sent! Check Active Registrations below to confirm it appeared.</span>';
     setTimeout(()=>{
       document.getElementById('addBox').style.display='none';
       loadMembers();
@@ -891,7 +997,7 @@ function cleanPlanForCard(plan){
 
 window.openFullCard = function(m){
     const cleanPlan = cleanPlanForCard(m.plan);
-  const profile = m.profile || 'https://ui-avatars.com/api/?name=U&background=0A0A8A&color=9AA0C0&size=300';
+  const profile = m.profile || m.profilePic || m.ProfilePic || 'https://ui-avatars.com/api/?name=U&background=0A0A8A&color=9AA0C0&size=300';
   const qr = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=0A0A8A&data=${m.membershipId||m.phone||'test'}`;
 
   document.getElementById('umuaguCard').innerHTML = `
@@ -931,30 +1037,33 @@ document.getElementById('shareBtn').onclick = async function(){
     const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(waText)}`;
 
     try{
-      const imgEl = document.getElementById('cardProfileImg');
-      if(imgEl && imgEl.src && !imgEl.src.startsWith('data:')){
-        await new Promise((resolve)=>{
-          if(imgEl.complete) resolve();
-          else { imgEl.onload = resolve; imgEl.onerror = resolve; }
+     const imgEl = document.getElementById('cardProfileImg');
+if(imgEl && imgEl.src && !imgEl.src.startsWith('data:') && imgEl.src.indexOf('drive.google.com') > -1){
+  try{
+    const photoId = imgEl.src.split('id=')[1]?.split('&')[0] || "";
+    if(photoId){
+      const res = await fetch(SCRIPT_URL + "?action=getPhoto&id=" + photoId);
+      const j = await res.json();
+      if(j.success && j.base64){
+        imgEl.src = j.base64;
+        await new Promise(r=>{
+          if(imgEl.complete) r();
+          else { imgEl.onload = r; imgEl.onerror = r; setTimeout(r, 1000); }
         });
-        try{
-          const c = document.createElement('canvas');
-          c.width = 300; c.height = 300;
-          const ctx = c.getContext('2d');
-          ctx.drawImage(imgEl, 0, 0, 300, 300);
-          imgEl.src = c.toDataURL('image/jpeg', 0.9);
-          await new Promise(r=>setTimeout(r,300));
-        }catch(e){}
+        await new Promise(r=>setTimeout(r,300));
       }
+    }
+  }catch(e){ console.log("Photo convert failed", e); }
+}
 
       const el = document.getElementById('umuaguCard');
-      const canvas = await html2canvas(el, {
-        scale: 2, 
-        backgroundColor: '#F5F6FB',
-        useCORS: true,
-        allowTaint: true,
-        logging: false
-      });
+   const canvas = await html2canvas(el, {
+  scale: 2, 
+  backgroundColor: '#F5F6FB',
+  useCORS: true,
+  allowTaint: false,
+  logging: false
+});
       
       canvas.toBlob((blob)=>{
         const fileName = `UMUAGU-${m.membershipId||'card'}.png`;
@@ -1124,6 +1233,133 @@ async function toggleStaff(user, status){
   await fetch(SCRIPT_URL + "?action=toggleStaff&username=" + encodeURIComponent(user) + "&status=" + status);
   loadStaffList();
 }
+
+// ===== REVENUE + REPORTS JS - EDITED ONLY TO USE POPUPS, SAME FUNCTION NAMES =====
+function openEverModal(){
+  document.getElementById('everModal').classList.add('open');
+  loadArchive();
+}
+function closeEverModal(){
+  document.getElementById('everModal').classList.remove('open');
+}
+function openReportModal(){
+  document.getElementById('reportModal').classList.add('open');
+}
+function closeReportModal(){
+  document.getElementById('reportModal').classList.remove('open');
+}
+function openArchiveModal(){
+  document.getElementById('archiveModal').classList.add('open');
+  loadArchive();
+}
+function closeArchiveModal(){
+  document.getElementById('archiveModal').classList.remove('open');
+}
+
+function loadRevenue() {
+  google.script.run.withSuccessHandler(function(total) {
+    document.getElementById("revenueTotal").innerText = Number(total).toLocaleString();
+    document.getElementById("revenueTotal2").innerText = Number(total).toLocaleString();
+  }).getRevenue();
+  
+  google.script.run.withSuccessHandler(function(totalEver) {
+    document.getElementById("totalEver").innerText = Number(totalEver).toLocaleString();
+    document.getElementById("totalEver2").innerText = Number(totalEver).toLocaleString();
+  }).getTotalEver();
+}
+
+function loadMonthBreakdown() {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const year = now.getFullYear();
+  google.script.run.withSuccessHandler(function(res) {
+    if (!res.success || res.plans.length === 0) {
+      document.getElementById("monthBreakdown").innerHTML = "<p style='color:#666; font-size:13px;'>No payments yet this month.</p>";
+      return;
+    }
+    let html = `<table style="width:100%; border-collapse: collapse;">`;
+    html += `<tr style="background:#0A1633; color:white;"><th style="padding:8px; text-align:left;">Plan</th><th>Count</th><th>Revenue</th></tr>`;
+    for (let p of res.plans) {
+      html += `<tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">${p.plan}</td><td style="text-align:center;">${p.count}</td><td style="text-align:right;">₦${p.revenue.toLocaleString()}</td></tr>`;
+    }
+    html += `</table><p style="color:#666; font-size:13px;">Total: ${res.totalCount} payments — ₦${res.totalRevenue.toLocaleString()}</p>`;
+    document.getElementById("monthBreakdown").innerHTML = html;
+  }).getMonthlyReport(month, year);
+}
+
+// ===== FIXED - USES FETCH LIKE STAFF, NOT google.script.run =====
+async function loadMonthlyReport() {
+  const val = document.getElementById("reportMonth").value; // e.g. "10-2026"
+  const parts = val.split("-");
+  const month = parseInt(parts[0]);
+  const year = parseInt(parts[1]);
+
+  const resultEl = document.getElementById("reportResult");
+  resultEl.innerHTML = "Loading...";
+
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=getMonthlyReport&month=" + month + "&year=" + year + "&t=" + Date.now());
+    const data = await res.json();
+    console.log("Monthly Report:", data); // check this if it still fails
+
+    if (!data.success) {
+      resultEl.innerHTML = "No data for this month.";
+      return;
+    }
+    let html = `<h3 style="color:white;">${data.month}/${data.year} — Total: ${data.totalCount} payments — Revenue: ₦${data.totalRevenue.toLocaleString()}</h3>`;
+    html += `<table style="width:100%; border-collapse: collapse; background:white; color:black; border-radius:8px; overflow:hidden;">`;
+    html += `<tr style="background:#0A1633; color:white;"><th style="padding:10px; text-align:left;">Plan</th><th>Count</th><th>Revenue</th></tr>`;
+    for (let p of data.plans) {
+      html += `<tr style="border-bottom:1px solid #ddd;"><td style="padding:10px;">${p.plan}</td><td style="text-align:center;">${p.count}</td><td style="text-align:right;">₦${p.revenue.toLocaleString()}</td></tr>`;
+    }
+    html += `</table>`;
+    if (data.plans.length === 0) html += `<p style="color:white;">No payments in this month.</p>`;
+    resultEl.innerHTML = html;
+  } catch(e) {
+    console.log(e);
+    resultEl.innerHTML = "Error loading report. Check backend - did you redeploy?";
+  }
+}
+
+async function loadArchive() {
+  const listEl = document.getElementById("archiveList");
+  if (!listEl) return;
+  listEl.innerHTML = "Loading...";
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=getArchive&t=" + Date.now());
+    const data = await res.json();
+    console.log("Archive:", data);
+
+    let html = "";
+    for (let i = 1; i < data.length; i++) {
+      html += `<div style="background:#f8f9fa; color:black; padding:12px; border-radius:10px; margin-bottom:8px;"><b>${data[i][0]}</b><br>₦${Number(data[i][1]).toLocaleString()} — Cleared on ${data[i][2]}<br><span style="color:#666; font-size:12px;">Total Ever then: ₦${Number(data[i][3]).toLocaleString()}</span></div>`;
+    }
+    if (data.length <= 1) html = "<p style='color:white;'>No past months yet. First auto-clear happens on 1st of next month.</p>";
+    listEl.innerHTML = html;
+    const everEl = document.getElementById("everArchiveMini");
+    if (everEl) everEl.innerHTML = html;
+  } catch(e) {
+    console.log(e);
+    listEl.innerHTML = "Error loading archive. Did you redeploy?";
+  }
+}
+
+async function loadAvailableMonths() {
+  try {
+    const res = await fetch(SCRIPT_URL + "?action=getAvailableMonths&t=" + Date.now());
+    const months = await res.json();
+    if (!months || months.length === 0) return;
+    const select = document.getElementById("reportMonth");
+    select.innerHTML = "";
+    months.forEach(function(m) {
+      const opt = document.createElement("option");
+      opt.value = m.month + "-" + m.year;
+      opt.textContent = m.label;
+      select.appendChild(opt);
+    });
+  } catch(e) { console.log(e); }
+}
+
 </script>
 <div id="scheduleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999;overflow:auto;padding:15px">
   <div style="max-width:520px;margin:20px auto;background:#fff;border-radius:16px;padding:12px">

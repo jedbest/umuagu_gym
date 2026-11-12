@@ -194,41 +194,6 @@ function parseDateCheck(s){
   return null;
 }
 
-function profilePicked(input){
-  const el=document.getElementById('profileName');
-  const label=document.getElementById('profileLabel');
-  if(el && input.files[0]){
-    const file = input.files[0];
-    el.textContent = "✅ " + file.name;
-    if(file.type.startsWith('image/')){
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = new Image();
-        img.onload = () => {
-          // Compress to 300x300 JPEG 0.6 (~15KB) for Sheet + Drive
-          const canvas = document.createElement('canvas');
-          canvas.width = 300; canvas.height = 300;
-          const ctx = canvas.getContext('2d');
-          const size = Math.min(img.width, img.height);
-          const x = (img.width - size)/2;
-          const y = (img.height - size)/2;
-          ctx.drawImage(img, x, y, size, size, 0, 0, 300, 300);
-          const compressed = canvas.toDataURL('image/jpeg', 0.6);
-          
-          label.innerHTML = `<img src="${compressed}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #a6ff00"><br>✅ Photo ready`;
-          
-          // Save BOTH formats
-          localStorage.setItem('tempProfilePic', compressed); // for preview
-          localStorage.setItem('tempProfilePicForSheet', compressed); // for Sheet upload
-          
-          console.log('Photo compressed:', Math.round(compressed.length/1024)+'KB - ready to upload');
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-}
 
 let camStream = null;
 
@@ -263,6 +228,43 @@ function closeCamera(){
   document.getElementById('btnOpenCam').style.display="block";
 }
 
+// ===== FIXED - ONE profilePicked, always compressed, always saves BOTH keys =====
+function profilePicked(input){
+  const el = document.getElementById('profileName');
+  const preview = document.getElementById('profilePreview');
+  const label = document.getElementById('profileLabel');
+  if(!input.files[0]) return;
+  
+  const file = input.files[0];
+  if(el) el.textContent = "✅ " + file.name;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      // Compress to 300x300 JPEG 0.6 (~15KB) - fits Sheet + Drive
+      const canvas = document.createElement('canvas');
+      canvas.width = 300; canvas.height = 300;
+      const ctx = canvas.getContext('2d');
+      const size = Math.min(img.width, img.height);
+      const x = (img.width - size)/2;
+      const y = (img.height - size)/2;
+      ctx.drawImage(img, x, y, size, size, 0, 0, 300, 300);
+      const compressed = canvas.toDataURL('image/jpeg', 0.6);
+
+      if(preview){ preview.src = compressed; preview.style.display = "block"; }
+      if(label) label.innerHTML = `<img src="${compressed}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #a6ff00"><br>✅ Photo ready`;
+      
+      // Save BOTH - this is the fix, before you only saved one
+      localStorage.setItem('tempProfilePic', compressed);
+      localStorage.setItem('tempProfilePicForSheet', compressed);
+      console.log('Photo compressed:', Math.round(compressed.length/1024)+'KB');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 function capturePhoto(){
   const video = document.getElementById('camPreview');
   const canvas = document.getElementById('camCanvas');
@@ -271,40 +273,38 @@ function capturePhoto(){
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video,0,0);
-  const dataUrl = canvas.toDataURL('image/jpeg',0.85);
   
-  preview.src = dataUrl;
-  preview.style.display = "block";
-  document.getElementById('profileName').textContent = "✅ Photo captured";
-  localStorage.setItem('tempProfilePic', dataUrl);
-  
-  // also create a file object for upload
-  fetch(dataUrl).then(res=>res.blob()).then(blob=>{
-    const file = new File([blob],"camera.jpg",{type:"image/jpeg"});
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    document.getElementById('profilePic').files = dt.files;
-  });
-  
+  // Compress camera photo too - same 300x300
+  const img = new Image();
+  img.onload = () => {
+    const c2 = document.createElement('canvas');
+    c2.width = 300; c2.height = 300;
+    const ctx2 = c2.getContext('2d');
+    const size = Math.min(img.width, img.height);
+    const x = (img.width - size)/2;
+    const y = (img.height - size)/2;
+    ctx2.drawImage(img, x, y, size, size, 0, 0, 300, 300);
+    const compressed = c2.toDataURL('image/jpeg', 0.6);
+
+    preview.src = compressed;
+    preview.style.display = "block";
+    document.getElementById('profileName').textContent = "✅ Photo captured";
+    // Save BOTH - this was missing for Camera
+    localStorage.setItem('tempProfilePic', compressed);
+    localStorage.setItem('tempProfilePicForSheet', compressed);
+
+    // Also create file object so validateForm sees profileFile
+    fetch(compressed).then(res=>res.blob()).then(blob=>{
+      const file = new File([blob],"camera.jpg",{type:"image/jpeg"});
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById('profilePic').files = dt.files;
+    });
+  };
+  img.src = canvas.toDataURL('image/jpeg', 0.85);
   closeCamera();
 }
 
-// keep your old profilePicked but make it show preview too
-const oldProfilePicked = profilePicked;
-profilePicked = function(input){
-  const el=document.getElementById('profileName');
-  const preview=document.getElementById('profilePreview');
-  if(input.files[0]){
-    el.textContent = "✅ " + input.files[0].name;
-    const reader = new FileReader();
-    reader.onload = e => {
-      preview.src = e.target.result;
-      preview.style.display = "block";
-      localStorage.setItem('tempProfilePic', e.target.result);
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-}
 
 async function validateForm(e){
   e.preventDefault();
@@ -338,7 +338,9 @@ console.log('SUBMIT PLAN DEBUG: selectedPlan=', selectedPlan, 'dropdown=', docum
   if(!sess) missing.push('Preferred Session');
   if(!plan) missing.push('Plan');
   if(!goal) missing.push('Goal');
-  const hasPhoto = !!profileFile || (!!localStorage.getItem('tempProfilePic') && document.getElementById('profilePreview')?.style.display === 'block' || document.getElementById('profileName')?.textContent.includes('✅'));
+  // ===== STRICT PHOTO CHECK - no leftovers from last person =====
+const savedPhotoCheck = localStorage.getItem('tempProfilePicForSheet') || localStorage.getItem('tempProfilePic') || '';
+const hasPhoto = !!profileFile || (savedPhotoCheck.length > 1000 && document.getElementById('profilePreview')?.src && document.getElementById('profilePreview').src.length > 1000);
 if(!hasPhoto) missing.push('Profile Photo');
   if(isNow && !receiptFile) missing.push('Receipt');
 
@@ -406,13 +408,23 @@ if(!hasPhoto) missing.push('Profile Photo');
       receiptObj = { name: receiptFile.name, mime: receiptFile.type, data: base64 };
     }
 
-    let profileObj = null;
-    if(profileFile){
-      const base64P = await getBase64(profileFile);
-      profileObj = { name: profileFile.name, mime: profileFile.type, data: base64P };
-    }
 
     const savedPhoto = localStorage.getItem('tempProfilePicForSheet') || localStorage.getItem('tempProfilePic') || '';
+    // If user picked a file but never triggered profilePicked (camera case), read the file directly
+let finalPhotoBase64 = "";
+if (savedPhoto && savedPhoto.indexOf('base64,') > -1) {
+  finalPhotoBase64 = savedPhoto.split('base64,')[1];
+} else if (profileFile) {
+  finalPhotoBase64 = await getBase64(profileFile);
+}
+// If still empty here, STOP - don't send empty to backend
+if (!finalPhotoBase64 || finalPhotoBase64.length < 1000) {
+  err.textContent = '⚠️ Profile Photo is required. Take or upload a photo first.';
+  err.style.display = 'block';
+  submitBtn.innerText = "SUBMIT REGISTRATION";
+  submitBtn.disabled = false;
+  return false;
+}
     const data = {
       name: name, phone: phone,
       branch: selectedBranch,
@@ -420,17 +432,26 @@ if(!hasPhoto) missing.push('Profile Photo');
       session: sess, plan: plan, goal: goal, payMethod: payMethod,
       price: price, amount: price, expiry: expiryDate, receipt: receiptObj,
       isTopUp: isTopUp,
-  ProfilePic: savedPhoto, // new format - string
-  profilePic: savedPhoto ? {
-    data: savedPhoto.split('base64,')[1],
-    mime: 'image/jpeg',
-    name: 'profile_'+phone+'.jpg'
-  } : null // old format - object - send both to be safe
+ profilePic: {
+  data: finalPhotoBase64,
+  mime: 'image/jpeg',
+  name: 'profile_'+phone+'.jpg'
+}
 
     };
 
     await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-    localStorage.setItem('payMethod', payMethod);
+// ===== CLEAR PHOTO LEFTOVER - so next person cannot reuse this photo =====
+localStorage.removeItem('tempProfilePic');
+localStorage.removeItem('tempProfilePicForSheet');
+const _prev = document.getElementById('profilePreview');
+if (_prev) { _prev.src = ""; _prev.style.display = "none"; }
+const _pname = document.getElementById('profileName');
+if (_pname) _pname.textContent = "";
+const _pinput = document.getElementById('profilePic');
+if (_pinput) _pinput.value = "";
+
+localStorage.setItem('payMethod', payMethod);
     localStorage.setItem('plan', plan);
     localStorage.setItem('memberName', name);
     localStorage.setItem('memberPhone', phone);
